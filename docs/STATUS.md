@@ -17,8 +17,7 @@ own status: [runtime](https://github.com/bloodborne-native/bloodborne-runtime/bl
   renderer ([performance](guide/performance.md)).
 - **Now:** the native renderer (the maintainer's focus from 2026-10-29): N2, shaders built to
   read the engine's draw state instead of the PS4 user data, then the game's shaders built ahead
-  of time as native shaders for each platform. Accepting the Metal renderer (N5) waits for players'
-  reports on 0.9.x.
+  of time as native shaders for each platform. The Metal renderer (N5) is accepted (2026-10-29).
 - **Memory for smaller Macs:** a 16 GB M1 Pro ran out of memory in the Forbidden Woods
   ([#8](https://github.com/bloodborne-native/bloodborne-mac/issues/8)). The game's peak footprint
   in Cathedral Ward is down from 7.8 GB to 5.7 GB on main (the recompiled library no longer keeps
@@ -41,7 +40,7 @@ Each bar has 20 blocks, one per 5% of the milestone's defined steps.
 | **Graphics** (bloodborne-runtime) | | |
 | N0 · scope, N1 · frame planning | 100% `████████████████████` | Deferred clears |
 | N4 · render adapter | 100% `████████████████████` | The renderer on the project's own GPU interface |
-| N5 · Metal backend | 95% `███████████████████░` | The default since 0.9.0 RC 1; the maintainer's play sessions passed; acceptance waits for players' reports on the release candidates and M1/M2 comparisons |
+| N5 · Metal backend | 100% `████████████████████` | Accepted (the maintainer, 2026-10-29); the default since 0.9.0 RC 1; MoltenVK selectable as a fallback |
 | N6 · the engine's render boundary | 100% `████████████████████` | Done (re-scoped 2026-10-28; on main since 2026-10-29): 99.94% of the engine's draws matched to their packets, their state and resources agreeing; every buffer address and resource slot found from the draw state; mesh draws bind their resources from it, with the translator or the recompiled library ([details](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md#n6-the-engines-render-boundary)). The other draw kinds move to N2: converted GCN shaders read the user data themselves, so taking draws over saves nothing until N2 |
 | N2 · shaders from the draw state, then native shaders ahead of time | 40% `████████░░░░░░░░░░░░` | The plan and the inventory ([steps](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md#n2-shaders-from-the-draw-state-then-ahead-of-time)): the game's shaders use the PS4 user data only to locate their resources, so shaders bound to the draw state's slots need none. Next: mesh shaders built that way |
 | N3 · textures as objects | 0% `░░░░░░░░░░░░░░░░░░░░` | After N2 |
@@ -95,14 +94,14 @@ Main is 0.9.1, plus:
 |---|---|---|
 | The game's code | With the recompiled library: 240,975 of 241,031 functions as arm64 code compiled on the player's Mac, 99% of instructions in C; 9,400 calls a second still reach the translator (Cathedral Ward) | The library is opt-in (the translator is the default); the game's own C library and file-streaming modules (libc.prx, libSceFios2.prx) run translated, their busiest functions replaced by host code |
 | The PS4's system services | Threads, memory, files, saves, input, audio, network and trophies are the runtime's host code; no PS4 firmware | libc.prx and libSceFios2.prx, above |
-| Graphics | R5 at 76%: every frame drawn by Metal directly, without Vulkan or MoltenVK; the GCN shaders converted to Metal once and cached (they stay converted, by the maintainer's decision) | The game still writes PS4 GPU command buffers that the runtime decodes each frame (about 0.6 core); N2 (shaders reading the engine's draw state, then ahead of time) and N3 (textures as objects) |
+| Graphics | R5 at 77%: every frame drawn by Metal directly, without Vulkan or MoltenVK; the GCN shaders converted to Metal once and cached (they stay converted, by the maintainer's decision) | The game still writes PS4 GPU command buffers that the runtime decodes each frame (about 0.6 core); N2 (shaders reading the engine's draw state, then ahead of time) and N3 (textures as objects) |
 | Platforms | macOS released | iOS a proof of concept; Linux the runtime only |
 
 ## Areas
 
 | Area | State |
 |---|---|
-| Graphics | Native Metal by default, without Vulkan or MoltenVK; MoltenVK selectable until N5 is accepted; Vulkan on Linux. Upscalers: MetalFX with the Metal renderer; FSR 3.1 and FSR 4.1.1 (run on the Mac's GPU) with MoltenVK ([native renderer](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md)) |
+| Graphics | Native Metal by default, without Vulkan or MoltenVK; MoltenVK selectable as a fallback; Vulkan on Linux. Upscalers: MetalFX with the Metal renderer; FSR 3.1 and FSR 4.1.1 (run on the Mac's GPU) with MoltenVK ([native renderer](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md)) |
 | Game features | bbport 0.6's frame rate through hooks (F3 for 30 FPS), live effects, aspect ratios, keyboard and mouse, Laurence's cinematic above 30 FPS |
 | Online | Seamless Hunt and The Hunter's Dream (the runtime's `bbnet20`, GPL-3.0-or-later); tested here without an account, players are testing both pools with 0.9.0. Seamless co-op (BBSC) is not supported |
 | Launcher | Profiles and saves with backups; trophies; the save editor (attributes, items, weapons, armor, gems; an edited save earns no trophies and plays offline only); settings shared with the in-game menu; mods and patches; 20 languages; platform-neutral code with CI on macOS, Linux and Windows ([launcher docs](https://github.com/bloodborne-native/bloodborne-launcher/tree/main/docs)) |
@@ -123,6 +122,5 @@ Main is 0.9.1, plus:
   ([#5](https://github.com/bloodborne-native/bloodborne-mac/issues/5)) could not be reproduced and
   is closed until it happens again. Older rare assertions: the runtime's
   [stability notes](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/STABILITY.md).
-- **Only one Mac measured** (M3 Pro); results from M1, M2 and M4 Macs are needed for N5's
-  acceptance.
+- **Only one Mac measured** (M3 Pro); results from M1, M2 and M4 Macs are welcome.
 - **Tests:** five GPU tests no longer compile and are not run (roadmap, Later).

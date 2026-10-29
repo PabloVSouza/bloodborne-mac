@@ -12,10 +12,8 @@ commit message, a code comment; the runtime's `docs/UPSTREAM.md` records them).
 
 ## Now
 
-- **N5 acceptance (native Metal renderer).** Implemented and the default since 0.9.0 RC 1; the
-  maintainer's play sessions passed (2026-10-26). Accepting it waits for players' reports on the
-  release candidates and the capability comparisons on M1 and M2 Macs (`BB_METAL_CAPS=compare`).
-  MoltenVK stays selectable until then.
+- **N2, the native renderer's next step** (the first item of Next, below), the maintainer's focus
+  from 2026-10-29. N5, the native Metal renderer, is accepted (Done).
 
 ## Next
 
@@ -140,7 +138,9 @@ Where each landed; the release notes say what changed for players.
 **Graphics** (bloodborne-runtime):
 
 - The native Metal renderer: every pipeline in Metal, the frame drawn through Metal, the render
-  adapter (A0–A6, M1–M4), native startup without Vulkan or MoltenVK; the default since 0.9.0 RC 1.
+  adapter (A0–A6, M1–M4), native startup without Vulkan or MoltenVK; the default since 0.9.0 RC 1,
+  accepted as N5 (the maintainer, 2026-10-29). MoltenVK stays selectable as a fallback until the
+  maintainer decides whether it leaves the macOS app.
 - MetalFX (runtime PR #2) on the native frame; FSR 4.1.1 on the Mac's GPU with the MoltenVK renderer
   (runtime #1, 0.8.3).
 - N0 (scope), N1 (frame planning: deferred clears).

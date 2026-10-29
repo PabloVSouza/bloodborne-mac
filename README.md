@@ -93,7 +93,7 @@ been measured so far: results on other Macs are welcome.
 | | Progress | |
 |---|---|---|
 | CPU: recompiling the game's code (R0–R4) | `████████████████████` 100% | Every function runs recompiled; the engine's render code is named |
-| Graphics: the native renderer (N0–N6) | `███████████████░░░░░` 76% | Native Metal by default; the engine's draws found at its own render boundary (N6); next, shaders built from the engine's draw state (N2) |
+| Graphics: the native renderer (N0–N6) | `███████████████░░░░░` 77% | Native Metal by default; the engine's draws found at its own render boundary (N6); next, shaders built from the engine's draw state (N2) |
 
 **Next:** the native renderer (N2: shaders that read the engine's draw state, then native shaders
 for each platform built ahead of time), and less memory for Macs with 8 and 16 GB. Details:
