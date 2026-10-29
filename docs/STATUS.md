@@ -76,6 +76,15 @@ Main is 0.9.1, plus:
 - **CI caches:** the app's and the runtime's workflows keep the built dependencies and a compiler
   cache between runs: a release build takes about 25 minutes instead of 60.
 
+## How native it is
+
+| Part | Native now | Still not native |
+|---|---|---|
+| The game's code | With the recompiled library: 240,975 of 241,031 functions as arm64 code compiled on the player's Mac, 99% of instructions in C; 9,400 calls a second still reach the translator (Cathedral Ward) | The library is opt-in (the translator is the default); the game's own C library and file-streaming modules (libc.prx, libSceFios2.prx) run translated, their busiest functions replaced by host code |
+| The PS4's system services | Threads, memory, files, saves, input, audio, network and trophies are the runtime's host code; no PS4 firmware | libc.prx and libSceFios2.prx, above |
+| Graphics | R5 at 76%: every frame drawn by Metal directly, without Vulkan or MoltenVK; the GCN shaders converted to Metal once and cached (they stay converted, by the maintainer's decision) | The game still writes PS4 GPU command buffers that the runtime decodes each frame (about 0.6 core); N2 (shaders reading the engine's draw state, then ahead of time) and N3 (textures as objects) |
+| Platforms | macOS released | iOS a proof of concept; Linux the runtime only |
+
 ## Areas
 
 | Area | State |
