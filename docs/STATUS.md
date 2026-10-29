@@ -16,8 +16,9 @@ own status: [runtime](https://github.com/bloodborne-native/bloodborne-runtime/bl
 - **Playable** on Apple Silicon: about 40 FPS in play at native 1080p on an M3 Pro with the Metal
   renderer ([performance](guide/performance.md)).
 - **Now:** accepting the native Metal renderer (N5), with players' reports on 0.9.x.
-- **Under way:** the recompiler's CPU work: the runtime's share of the game's main thread (calls
-  left to the translator down 42%, CPU time 342% to 339%), then the host-call path.
+- **Under way:** the recompiler's CPU work: calls left to the translator down from 69,600 a second
+  to 9,400 (CPU time 342% to 339% for the first half); the host-call path measured without a
+  gain. Left: memory ordering, with the maintainer's conditions.
 - **Paused** on the runtime's `n6` branch: N6 is done (the engine's draws observed at its render
   boundary; mesh draws bind their resources from its draw state); N2, shaders built to read the
   draw state instead of the PS4 user data, has its plan and inventory (40%).
@@ -33,7 +34,7 @@ Each bar has 20 blocks, one per 5% of the milestone's defined steps.
 | R3 · speed | 100% `████████████████████` | 14% less CPU time than the translator at the same frame rate |
 | The library built from the launcher | 100% `████████████████████` | 13.5 minutes on an M3 Pro, no Xcode needed |
 | R4 · names for the engine's code | 100% `████████████████████` | 204 functions named; the draw state, models, materials and shaders described |
-| The recompiler's CPU work | 30% `██████░░░░░░░░░░░░░░` | The first plan measured (flags, private frames, vector barriers: little or nothing); jump tables across blocks and six host C library calls: 342% to 339%; next, the host-call path |
+| The recompiler's CPU work | 30% `██████░░░░░░░░░░░░░░` | The first plan measured (flags, private frames, vector barriers: little or nothing); more jump tables and host C library calls: translator calls 69,600 a second to 9,400, 342% to 339%; the host-call path without a gain; next, memory ordering (the maintainer's conditions) |
 | **Graphics** (bloodborne-runtime) | | |
 | N0 · scope, N1 · frame planning | 100% `████████████████████` | Deferred clears |
 | N4 · render adapter | 100% `████████████████████` | The renderer on the project's own GPU interface |
