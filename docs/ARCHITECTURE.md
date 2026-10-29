@@ -33,9 +33,10 @@ proof of concept):
 - **The launcher is one codebase for every platform:** its layout already works on phone-sized
   screens.
 
-The iOS proof of concept (the `ios-poc` branches of bloodborne-runtime and bloodborne-recomp, its
-[write-up](https://github.com/bloodborne-native/bloodborne-runtime/blob/ios-poc/docs/IOS_POC.md))
-also showed what keeps the runtime from being embedded: it is a program (`bb-probe`) started by
+The iOS proof of concept is on the runtime's and the recompiler's `main` since 2026-10-29: its
+platform code behind `TARGET_OS_IPHONE`, its general fixes for every platform
+([write-up](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/IOS_POC.md)).
+It also showed what keeps the runtime from being embedded: it is a program (`bb-probe`) started by
 `run.sh`, which prepares the game with bash and Python. iOS allows one process and neither tool,
 so the runtime has to become a library with a small C API, with the preparation in the runtime or
 the launcher. The steps are in the [roadmap](ROADMAP.md).
@@ -74,9 +75,9 @@ and [profiles and saves](https://github.com/bloodborne-native/bloodborne-launche
 
 ## Where it is going: native code
 
-The game's code is translated while it runs, and every frame is the PS4's command buffers
-decoded into Metal calls. Two milestones replace both with native code; where each stands is in
-[Status](STATUS.md#milestones):
+By default the game's code is translated while it runs, and every frame is the PS4's GPU command
+buffers decoded into Metal calls. Two milestones replace both with native code; where each stands
+is in [Status](STATUS.md#how-native-it-is):
 
 - **The recompiler** turns the game's functions, from the player's own executable, into C
   compiled into a native library, checked against calls recorded from the original. Every
@@ -85,8 +86,13 @@ decoded into Metal calls. Two milestones replace both with native code; where ea
   busiest functions, which the next steps use
   ([Recompilation](https://github.com/bloodborne-native/bloodborne-recomp/blob/main/docs/RECOMPILATION.md)).
 - **The native renderer** draws with Metal directly on macOS, without Vulkan or MoltenVK (the
-  MoltenVK fallback stays selectable until N5 is accepted; Linux keeps its Vulkan backend). Next,
-  N6 takes the engine's draws at its own render boundary instead of decoding PS4 command buffers
+  MoltenVK fallback stays selectable until N5 is accepted; Linux keeps its Vulkan backend), through
+  the project's own GPU interface, the render adapter. The goal is for the adapter to take the
+  engine's draws, with their draw state, instead of the PS4 command buffers the engine writes
+  under them. N6 found that boundary and every input of a draw in the engine's state; N2 builds the
+  shaders to read that state, then builds the game's shaders once, ahead of time, as native
+  shaders for each platform (Metal on macOS and iOS, SPIR-V for Vulkan); N3 takes textures as the
+  objects the engine creates, without a second copy of each
   ([Native renderer](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md)).
 
 Only the tools are published, never the game's code.

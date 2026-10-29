@@ -40,7 +40,7 @@
   <img src="docs/screenshots/title.jpg" alt="Bloodborne's title screen on a Mac" width="98%">
 </p>
 <p align="center">
-  <img src="docs/screenshots/hunters-dream.jpg" alt="The Hunter's Dream at 60 FPS with FSR 3.1 on an Apple M3 Pro" width="49%">
+  <img src="docs/screenshots/hunters-dream.jpg" alt="The Hunter's Dream on an Apple M3 Pro" width="49%">
   <img src="docs/screenshots/game.jpg" alt="Bloodborne running on an Apple M3 Pro" width="49%">
 </p>
 <p align="center">
@@ -58,10 +58,13 @@
 
 ## Features
 
-- **Native on Apple Silicon:** the game's x86-64 code is translated to arm64 as it runs.
+- **Native on Apple Silicon:** the game's x86-64 code runs as arm64, translated as it runs or,
+  on request, compiled ahead of time for your Mac from your own copy (no Rosetta 2). Every frame
+  is drawn by Metal directly.
 - **One app, nothing else to install:** download, open, choose your game folder, play.
 - **A launcher** ([bloodborne-launcher](https://github.com/bloodborne-native/bloodborne-launcher)) with graphics, controls, game options, mods, patches and the game's log.
-- **Upscalers,** optional: Apple MetalFX and AMD FSR 3.1.
+- **Upscalers,** optional: Apple MetalFX with the Metal renderer; AMD FSR 3.1 and FSR 4.1.1 with
+  the MoltenVK renderer.
 - **An in-game settings menu** (F1, or L3 + R3 on a controller).
 - **Controllers, keyboard and mouse,** with mapping for all three; the mouse turns the camera and
   points in the game's menus.
@@ -90,9 +93,11 @@ been measured so far: results on other Macs are welcome.
 | | Progress | |
 |---|---|---|
 | CPU: recompiling the game's code (R0–R4) | `████████████████████` 100% | Every function runs recompiled; the engine's render code is named |
-| Graphics: the native renderer (N0–N6) | `███████████████░░░░░` 76% | Native Metal by default; the engine's draws taken at its render boundary (N6, on a branch); next, shaders reading the engine's draw state (N2) |
+| Graphics: the native renderer (N0–N6) | `███████████████░░░░░` 76% | Native Metal by default; the engine's draws found at its own render boundary (N6); next, shaders built from the engine's draw state (N2) |
 
-**Next:** N2, shaders that read the engine's draw state, and the recompiler's CPU work. Details: [Status](docs/STATUS.md) and [Roadmap](docs/ROADMAP.md).
+**Next:** the native renderer (N2: shaders that read the engine's draw state, then native shaders
+for each platform built ahead of time), and less memory for Macs with 8 and 16 GB. Details:
+[Status](docs/STATUS.md) and [Roadmap](docs/ROADMAP.md).
 
 **Known issues:** blood on already killed enemies can look pale after a save reload; the camera
 after a cutscene sometimes starts in front of your character. See
@@ -135,7 +140,7 @@ recompiler and its CPU layer don't depend on macOS: other platforms can build on
 Built on [**bbport**](https://github.com/deadinside28/bloodborne_pc) by deadinside28, the native
 Linux port this project started from as a fork, and on [**shadPS4**](https://github.com/shadps4-emu/shadPS4):
 the loader, the PS4 runtime, the renderer and its extensions, the upscalers and the game patches
-come from them; bbport's releases are merged up to 0.51 and ported in parts from 0.6. Native
+come from them; bbport's releases are merged up to 0.51 and ported in parts from 0.6 and 0.7. Native
 Metal rendering also uses shader and pipeline work first published by
 [**Huax-1839/bloodborne-macos**](https://github.com/Huax-1839/bloodborne-macos), adapted through
 [**Wooloomooloo2/bloodborne_mac_port**](https://github.com/Wooloomooloo2/bloodborne_mac_port).

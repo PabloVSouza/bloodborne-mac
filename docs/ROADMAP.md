@@ -19,24 +19,28 @@ commit message, a code comment; the runtime's `docs/UPSTREAM.md` records them).
 
 ## Next
 
-In this order (maintainer, 2026-10-28: the CPU work before N2's next step, which can save at most
-0.2–0.3 core of the draw-preparation threads):
+In this order (maintainer, 2026-10-29: the native renderer first):
 
-1. **The recompiler's CPU work** (recomp and runtime), for CPUs weaker than the Mac's. Measured
-   first: clang already drops the flags nothing reads, plain accesses to private frames gain
-   nothing, and vector barriers hold about 2%. Now: the runtime's share of the game's main thread
-   (about 11% of its busy time): calls left to the translator done (more jump tables and C library
-   calls on the host: 69,600 a second became 9,400, the game's own new and delete); the host-call
-   path measured without a gain (plain calls without the bridge: 349% against 348%), as `rc_call`'s
-   call-site cache was before. Left: memory ordering kept only around the engine's
+1. **N2, shaders from the draw state, then native shaders ahead of time** (runtime). N6 found
+   every input of a draw in the engine's draw state; the shaders still read the PS4 user data, so
+   N2 builds them to read the draw state's slots instead: mesh draws first, then the other draw
+   kinds. Then the game's shaders are built once, ahead of time, on the player's device, as native
+   shaders for each platform (Metal libraries on macOS and iOS, SPIR-V for Vulkan), with anything
+   unforeseen converted at first use as now. Its steps are in the runtime's
+   [NATIVE_RENDERER.md](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md#n2-shaders-from-the-draw-state-then-ahead-of-time).
+2. **Memory for Macs with 8 and 16 GB** (runtime): a 16 GB M1 Pro ran out of memory in the
+   Forbidden Woods ([#8](https://github.com/bloodborne-native/bloodborne-mac/issues/8)), and 8 GB
+   Macs are still sold. Main's peak footprint is 5.7 GB in Cathedral Ward (7.8 GB before the
+   recompiled library stopped keeping the game decoded); next, the iPhone's compact memory layout
+   as a Mac mode (the game's memory as one file mapping, Metal's view of it, nothing pinned), each
+   step measured in footprint and FPS.
+3. **N3, textures as objects** (runtime): textures taken as the objects the engine creates and
+   releases, without a second copy of each in Metal (about 1–1.5 GB in Cathedral Ward).
+4. **The recompiler's memory ordering** (recomp): ordering kept only around the engine's
    synchronization, which R4.4 named, with the maintainer's conditions (the generator's analysis,
-   a safety case and a long play session).
-2. **N2, shaders from the draw state, then ahead of time** (runtime, on the `n6` branch with N6):
-   shaders built to read their resources from the engine's draw state, through the slots N6
-   found, instead of the PS4 user data; mesh draws first, the other draw kinds after, then
-   converted once ahead of time. Its steps are in that branch's
-   [NATIVE_RENDERER.md](https://github.com/bloodborne-native/bloodborne-runtime/blob/n6/docs/NATIVE_RENDERER.md#n2-shaders-from-the-draw-state-then-ahead-of-time).
-3. **N3, textures as objects** (runtime).
+   a safety case and a long play session). The rest of its CPU work is measured: calls left to the
+   translator 69,600 a second to 9,400; flags, private frames, vector barriers and the host-call
+   path gain little or nothing.
 
 ## Later
 
@@ -55,6 +59,11 @@ In this order (maintainer, 2026-10-28: the CPU work before N2's next step, which
   no longer compile; they are listed in `runtime/gpu/CMakeLists.txt` instead of run.
 
 **From other forks** (each measured on our build first):
+
+- bbport 0.7: cloth fluttering above 30 FPS (Havok's stiffness per substep) and the play time
+  counted correctly above 30 FPS; the point-light shadow wedges and the HUD's item-icon grid
+  (check on Metal first); the frame limiter, the FPS drop after loading another save, the hit
+  collector's cap. The list: the runtime's `docs/UPSTREAM.md`.
 
 - Mods: more folder layouts load, and folders that do not are named (Supermedo `dd2314e`).
 - An external FPS patch replaces the built-in preset (Supermedo `8042500`).
@@ -80,13 +89,14 @@ In this order (maintainer, 2026-10-28: the CPU work before N2's next step, which
   until ready, behind a setting.
 
 **iOS** (the proof of concept: the game at 23 FPS at 960×540 on an iPhone 17 Pro Max, bound by
-the CPU without JIT; the runtime's `ios-poc` branch,
-[write-up](https://github.com/bloodborne-native/bloodborne-runtime/blob/ios-poc/docs/IOS_POC.md);
+the CPU without JIT; on `main` since 2026-10-29,
+[write-up](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/IOS_POC.md);
 how code is organized: [Architecture](ARCHITECTURE.md#where-code-lives)):
 
-1. The general fixes to `main`, each measured on the Mac: the game's mutex as host code, natives
-   called without the translator, the jump-table recognition once its generator bug is fixed,
-   bbcpu's no-JIT build option, the UI scale.
+1. Done (2026-10-29): the proof of concept merged to `main`, its platform code behind
+   `TARGET_OS_IPHONE` (the game's mutex as host code stays iOS-only: it costs on the Mac), its
+   general fixes for every platform (hashing without the decode cache, no JIT on iOS, the UI
+   scale). bloodborne-ios still builds from the runtime's `ios-poc` branch, to be moved to `main`.
 2. The iOS platform code in the runtime's platform layer behind an `ios-arm64` CMake preset and a
    compile-only CI job: the compact memory layout as a named mode, the system call and Metal
    format differences.
@@ -133,7 +143,8 @@ Where each landed; the release notes say what changed for players.
 - MetalFX (runtime PR #2) on the native frame; FSR 4.1.1 on the Mac's GPU with the MoltenVK renderer
   (runtime #1, 0.8.3).
 - N0 (scope), N1 (frame planning: deferred clears).
-- N6, the engine's render boundary (runtime `n6` branch, 2026-10-28): the engine's draws matched to
+- N6, the engine's render boundary (2026-10-28, merged 2026-10-29: runtime `cf0ce17d`; mesh draws
+  recognised with the recompiled library too, recomp `8c49bc7`): the engine's draws matched to
   their packets and observed; every buffer address and resource slot found from its draw state;
   mesh draws bind their resources from it (`BB_RENDER_BOUNDARY=observe|mesh`).
 - Crashes fixed: character motion vectors (runtime `57fba4f`), the GX worker with live dynamic
@@ -148,6 +159,15 @@ Where each landed; the release notes say what changed for players.
 through hooks (F3 for 30 FPS); Laurence's cinematic above 30 FPS; effects switched live; aspect
 ratios; keyboard and mouse with a menu pointer; button prompts for the device in use; online
 (Seamless Hunt and The Hunter's Dream, runtime `49e2d2c`).
+
+**bbport 0.7, ported by hand** (runtime): the GX occlusion query guard, the crash at `0x2169edc`
+(whp199's PR #343; runtime `994846bb`). Its occlusion intervals were measured without a gain on
+Metal and not taken.
+
+**Memory and the recompiled library** (2026-10-29): hashing without the decode cache, from the
+iPhone work (recomp `da077b8`: the peak footprint 7.8 GB to 5.7 GB); 99 more jump tables and the C
+library's character tables and busiest calls on the host (recomp `0f344f8`, runtime `540a91b1`:
+translator calls 69,600 a second to 9,400).
 
 **Release candidates learn of newer releases** (launcher `9466d2d`): a candidate build carries its
 tag and checks candidates too, so it is told about the next candidate and the final release.

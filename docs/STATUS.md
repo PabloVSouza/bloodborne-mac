@@ -3,7 +3,7 @@
 [← Documentation](README.md)
 
 Where the whole project stands: what is released, what is on main, what is being worked on and
-what comes next. Updated 2026-10-28. The plan in order: [Roadmap](ROADMAP.md). Each repository's
+what comes next. Updated 2026-10-29. The plan in order: [Roadmap](ROADMAP.md). Each repository's
 own status: [runtime](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md#progress),
 [recompiler](https://github.com/bloodborne-native/bloodborne-recomp/blob/main/docs/RECOMPILATION.md#milestones),
 [launcher](https://github.com/bloodborne-native/bloodborne-launcher/blob/main/README.md#status).
@@ -15,13 +15,16 @@ own status: [runtime](https://github.com/bloodborne-native/bloodborne-runtime/bl
   play, the save editor and the recompiled code page ([notes](releases/v0.9.0.md)).
 - **Playable** on Apple Silicon: about 40 FPS in play at native 1080p on an M3 Pro with the Metal
   renderer ([performance](guide/performance.md)).
-- **Now:** accepting the native Metal renderer (N5), with players' reports on 0.9.x.
-- **Under way:** the recompiler's CPU work: calls left to the translator down from 69,600 a second
-  to 9,400 (CPU time 342% to 339% for the first half); the host-call path measured without a
-  gain. Left: memory ordering, with the maintainer's conditions.
-- **Paused** on the runtime's `n6` branch: N6 is done (the engine's draws observed at its render
-  boundary; mesh draws bind their resources from its draw state); N2, shaders built to read the
-  draw state instead of the PS4 user data, has its plan and inventory (40%).
+- **Now:** the native renderer (the maintainer's focus from 2026-10-29): N2, shaders built to
+  read the engine's draw state instead of the PS4 user data, then the game's shaders built ahead
+  of time as native shaders for each platform. Accepting the Metal renderer (N5) waits for players'
+  reports on 0.9.x.
+- **Memory for smaller Macs:** a 16 GB M1 Pro ran out of memory in the Forbidden Woods
+  ([#8](https://github.com/bloodborne-native/bloodborne-mac/issues/8)). The game's peak footprint
+  in Cathedral Ward is down from 7.8 GB to 5.7 GB on main (the recompiled library no longer keeps
+  the whole game decoded); next, the iPhone's compact memory layout as a Mac mode, toward 8 GB Macs.
+- **The recompiler's CPU work:** calls left to the translator down from 69,600 a second to 9,400;
+  what is left (memory ordering) waits for the maintainer's conditions.
 
 ## Milestones
 
@@ -34,13 +37,13 @@ Each bar has 20 blocks, one per 5% of the milestone's defined steps.
 | R3 · speed | 100% `████████████████████` | 14% less CPU time than the translator at the same frame rate |
 | The library built from the launcher | 100% `████████████████████` | 13.5 minutes on an M3 Pro, no Xcode needed |
 | R4 · names for the engine's code | 100% `████████████████████` | 204 functions named; the draw state, models, materials and shaders described |
-| The recompiler's CPU work | 30% `██████░░░░░░░░░░░░░░` | The first plan measured (flags, private frames, vector barriers: little or nothing); more jump tables and host C library calls: translator calls 69,600 a second to 9,400, 342% to 339%; the host-call path without a gain; next, memory ordering (the maintainer's conditions) |
+| The recompiler's CPU work | 30% `██████░░░░░░░░░░░░░░` | The first plan measured (flags, private frames, vector barriers, the host-call path: little or nothing); more jump tables and host C library calls: translator calls 69,600 a second to 9,400, 342% to 339%; next, memory ordering (the maintainer's conditions) |
 | **Graphics** (bloodborne-runtime) | | |
 | N0 · scope, N1 · frame planning | 100% `████████████████████` | Deferred clears |
 | N4 · render adapter | 100% `████████████████████` | The renderer on the project's own GPU interface |
 | N5 · Metal backend | 95% `███████████████████░` | The default since 0.9.0 RC 1; the maintainer's play sessions passed; acceptance waits for players' reports on the release candidates and M1/M2 comparisons |
-| N6 · the engine's render boundary | 100% `████████████████████` | Done on the runtime's `n6` branch (re-scoped 2026-10-28): 99.94% of the engine's draws matched to their packets, their state and resources agreeing; every buffer address and resource slot found from the draw state; mesh draws bind their resources from it ([details](https://github.com/bloodborne-native/bloodborne-runtime/blob/n6/docs/NATIVE_RENDERER.md#n6-the-engines-render-boundary)). The other draw kinds move to N2: converted GCN shaders read the user data themselves, so taking draws over saves nothing until N2 |
-| N2 · shaders from the draw state, then ahead of time | 40% `████████░░░░░░░░░░░░` | On the runtime's `n6` branch: the plan written ([steps](https://github.com/bloodborne-native/bloodborne-runtime/blob/n6/docs/NATIVE_RENDERER.md#n2-shaders-from-the-draw-state-then-ahead-of-time)). The inventory: the game's shaders use the PS4 user data only to locate their resources, so shaders bound to the draw state's slots need none. Next: mesh shaders built that way |
+| N6 · the engine's render boundary | 100% `████████████████████` | Done (re-scoped 2026-10-28; on main since 2026-10-29): 99.94% of the engine's draws matched to their packets, their state and resources agreeing; every buffer address and resource slot found from the draw state; mesh draws bind their resources from it, with the translator or the recompiled library ([details](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md#n6-the-engines-render-boundary)). The other draw kinds move to N2: converted GCN shaders read the user data themselves, so taking draws over saves nothing until N2 |
+| N2 · shaders from the draw state, then native shaders ahead of time | 40% `████████░░░░░░░░░░░░` | The plan and the inventory ([steps](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md#n2-shaders-from-the-draw-state-then-ahead-of-time)): the game's shaders use the PS4 user data only to locate their resources, so shaders bound to the draw state's slots need none. Next: mesh shaders built that way |
 | N3 · textures as objects | 0% `░░░░░░░░░░░░░░░░░░░░` | After N2 |
 | **Platforms** | | |
 | macOS (Apple Silicon) | | Released |
@@ -62,12 +65,22 @@ Each bar has 20 blocks, one per 5% of the milestone's defined steps.
 | 0.7.0 | Stretched geometry fixed; local trophies |
 | 0.6.0 | Profiles and saves; the opening-video crash fixed |
 
-Release notes: [docs/releases](releases/). bbport compatibility: 0.51, plus parts of 0.6 ported by
-hand.
+Release notes: [docs/releases](releases/). bbport compatibility: 0.51, plus parts of 0.6 and 0.7
+ported by hand (the runtime's [Upstream](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/UPSTREAM.md)).
 
 ## On main
 
 Main is 0.9.1, plus:
+
+- **The GX occlusion query guard** (bbport 0.7, whp199's PR #343): the rare crash at `0x2169edc`
+  on GXRenderThread ([#3](https://github.com/bloodborne-native/bloodborne-mac/issues/3),
+  [#7](https://github.com/bloodborne-native/bloodborne-mac/issues/7)) guarded.
+- **Less memory:** the recompiled library no longer keeps the whole game's decoded instructions
+  after checking them (from the iPhone work): the peak footprint in Cathedral Ward 7.8 GB to 5.7 GB.
+- **Fewer calls into the translator** from the recompiled library: more jump tables decoded and
+  the C library's busiest functions on the host (69,600 a second to 9,400).
+- **The branches merged:** N6 (the engine's render boundary; mesh draws now recognised with the
+  recompiled library too) and the iPhone proof of concept (its code behind `TARGET_OS_IPHONE`).
 
 - **R4** (bloodborne-recomp's `annotations/`): the engine's render boundary, the draw state,
   models, meshes, materials, shader programs, the synchronization primitives and the 20 busiest
@@ -89,7 +102,6 @@ Main is 0.9.1, plus:
 
 | Area | State |
 |---|---|
-| CPU | bbcpu translates the game's x86-64 code to arm64 as it runs (the default); the recompiled library runs it compiled ahead of time from the player's own copy, with 14% less CPU time ([Recompilation](https://github.com/bloodborne-native/bloodborne-recomp/blob/main/docs/RECOMPILATION.md)) |
 | Graphics | Native Metal by default, without Vulkan or MoltenVK; MoltenVK selectable until N5 is accepted; Vulkan on Linux. Upscalers: MetalFX with the Metal renderer; FSR 3.1 and FSR 4.1.1 (run on the Mac's GPU) with MoltenVK ([native renderer](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md)) |
 | Game features | bbport 0.6's frame rate through hooks (F3 for 30 FPS), live effects, aspect ratios, keyboard and mouse, Laurence's cinematic above 30 FPS |
 | Online | Seamless Hunt and The Hunter's Dream (the runtime's `bbnet20`, GPL-3.0-or-later); tested here without an account, players are testing both pools with 0.9.0. Seamless co-op (BBSC) is not supported |
@@ -99,11 +111,17 @@ Main is 0.9.1, plus:
 
 - **Known bugs:** blood on already killed enemies can look pale after a save reload; the camera
   after a cutscene sometimes starts in front of the character. Causes not isolated.
+- **Out of memory on a 16 GB Mac** in the Forbidden Woods
+  ([#8](https://github.com/bloodborne-native/bloodborne-mac/issues/8)), with the MoltenVK renderer:
+  waiting for the reporter's log; main's lower footprint and the compact memory layout are the
+  fixes in progress.
+- **The GXRenderThread crash** at `0x2169edc`
+  ([#7](https://github.com/bloodborne-native/bloodborne-mac/issues/7)): guarded on main, kept open
+  until a long session passes without it.
 - **Watch list:** a short white flash in the opening video and an enemy drawn as colour noise
-  have not recurred, without a confirmed fix. A GXRenderThread crash in Cathedral Ward
-  ([#3](https://github.com/bloodborne-native/bloodborne-mac/issues/3)) and a crash on death in
-  Central Yharnam ([#5](https://github.com/bloodborne-native/bloodborne-mac/issues/5)) could not be
-  reproduced and are closed until they happen again. Older rare assertions: the runtime's
+  have not recurred, without a confirmed fix. A crash on death in Central Yharnam
+  ([#5](https://github.com/bloodborne-native/bloodborne-mac/issues/5)) could not be reproduced and
+  is closed until it happens again. Older rare assertions: the runtime's
   [stability notes](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/STABILITY.md).
 - **Only one Mac measured** (M3 Pro); results from M1, M2 and M4 Macs are needed for N5's
   acceptance.
