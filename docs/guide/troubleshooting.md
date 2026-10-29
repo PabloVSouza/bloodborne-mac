@@ -37,8 +37,8 @@ Please do not report problems with this port to shadPS4 or to bbport.
 
 - **The Metal renderer is new** (the default since 0.9.0 RC 1). If the picture or stability is
   wrong with it, switch to MoltenVK (Advanced → Renderer) and report what you saw.
-- **Online play** (Seamless Hunt and The Hunter's Dream) is in 0.9.0; seamless co-op (BBSC)
-  is not supported. A save changed with the save editor plays offline only.
+- **Online play** (Seamless Hunt and The Hunter's Dream) is in 0.9.0. A save changed with the
+  save editor plays offline only.
 - *The Old Hunters*: the Game of the Year editions include it; add-on packages in
   `user/addcont/` are not tested on macOS.
 
