@@ -96,7 +96,8 @@ how code is organized: [Architecture](ARCHITECTURE.md#where-code-lives)):
 1. Done (2026-10-29): the proof of concept merged to `main`, its platform code behind
    `TARGET_OS_IPHONE` (the game's mutex as host code stays iOS-only: it costs on the Mac), its
    general fixes for every platform (hashing without the decode cache, no JIT on iOS, the UI
-   scale). bloodborne-ios still builds from the runtime's `ios-poc` branch, to be moved to `main`.
+   scale). bloodborne-ios builds from the runtime's `main` too (its core and GPU library compile;
+   not yet run on the phone from it).
 2. The iOS platform code in the runtime's platform layer behind an `ios-arm64` CMake preset and a
    compile-only CI job: the compact memory layout as a named mode, the system call and Metal
    format differences.
