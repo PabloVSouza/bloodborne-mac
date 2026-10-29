@@ -46,6 +46,9 @@ Please do not report problems with this port to shadPS4 or to bbport.
 
 | Problem | Fixed in |
 |---|---|
+| Building the recompiled code stayed on "Checking your game" and Cancel did nothing; leaving the page could show the build as cancelled | 0.9.2 |
+| Cloth fluttering and the play time counted slow above 30 FPS | 0.9.2 |
+| A rare crash after long sessions (exit code 139, the render thread at `0x2169edc`) | 0.9.2 |
 | Walls and scenery black on every start after a long session, until the shader cache was deleted | 0.9.1 |
 | Closing the on-screen keyboard after typing a name opened it again at once, several times in a row | 0.9.0 |
 | Opening the game's status page in the Lecture Building, or quitting, could stop the game with the Metal renderer | 0.9.0 RC 2 |

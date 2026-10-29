@@ -173,7 +173,8 @@ translator calls 69,600 a second to 9,400).
 **Release candidates learn of newer releases** (launcher `9466d2d`): a candidate build carries its
 tag and checks candidates too, so it is told about the next candidate and the final release.
 
-**Releases:** 0.9.1 (2026-10-28): the shader cache fix for black walls after long play (app issue
+**Releases:** 0.9.2 (2026-10-29): the recompiled-code build fixed (app issue #9), bbport 0.7's cloth,
+play time and `0x2169edc` guard, about 2 GB less memory with the recompiled code. 0.9.1 (2026-10-28): the shader cache fix for black walls after long play (app issue
 #7). 0.9.0 (2026-10-28): the release candidates' changes, the recompiled code page, a
 faster translator, game threads on the performance cores, the on-screen keyboard fix.
 

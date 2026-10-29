@@ -10,9 +10,10 @@ own status: [runtime](https://github.com/bloodborne-native/bloodborne-runtime/bl
 
 ## At a glance
 
-- **Released:** 0.9.1, on 2026-10-28: the shader cache no longer turns walls black after long play
-  ([notes](releases/v0.9.1.md)); 0.9.0, the same day, brought the native Metal renderer, online
-  play, the save editor and the recompiled code page ([notes](releases/v0.9.0.md)).
+- **Released:** 0.9.2, on 2026-10-29: building the recompiled code works again, cloth no longer
+  flutters at high frame rates, the rare `0x2169edc` crash is guarded and the recompiled code
+  uses about 2 GB less memory ([notes](releases/v0.9.2.md)). 0.9.0 brought the native Metal
+  renderer, online play, the save editor and the recompiled code page ([notes](releases/v0.9.0.md)).
 - **Playable** on Apple Silicon: about 40 FPS in play at native 1080p on an M3 Pro with the Metal
   renderer ([performance](guide/performance.md)).
 - **Now:** the native renderer (the maintainer's focus from 2026-10-29): N2, shaders built to
@@ -53,6 +54,7 @@ Each bar has 20 blocks, one per 5% of the milestone's defined steps.
 
 | Version | Highlights |
 |---|---|
+| 0.9.2 | The recompiled-code build fixed (it starts, survives leaving the page, counts as it compiles, Cancel stops it all); cloth at high frame rates and the play time (bbport 0.7); the `0x2169edc` crash guarded (bbport 0.7); about 2 GB less memory and fewer translator calls with the recompiled code |
 | 0.9.1 | The shader cache no longer reuses a shader's slot, which drew walls and scenery black after long play; caches are rebuilt once; the draw-preparation threads about 10% less busy |
 | 0.9.0 | The release candidates' changes; the recompiled code page (the library built on the player's Mac); a faster translator; the game's threads on the performance cores; the on-screen keyboard no longer reopens after a name is typed |
 | 0.9.0 RC 2 | Online play; the save editor; the launcher's new look with Saves and Trophies tabs; in-game menus in its colours; a faster translator; macOS 15 |
@@ -69,17 +71,7 @@ ported by hand (the runtime's [Upstream](https://github.com/bloodborne-native/bl
 
 ## On main
 
-Main is 0.9.1, plus:
-
-- **The GX occlusion query guard** (bbport 0.7, whp199's PR #343): the rare crash at `0x2169edc`
-  on GXRenderThread ([#3](https://github.com/bloodborne-native/bloodborne-mac/issues/3),
-  [#7](https://github.com/bloodborne-native/bloodborne-mac/issues/7)) guarded.
-- **Less memory:** the recompiled library no longer keeps the whole game's decoded instructions
-  after checking them (from the iPhone work): the peak footprint in Cathedral Ward 7.8 GB to 5.7 GB.
-- **Fewer calls into the translator** from the recompiled library: more jump tables decoded and
-  the C library's busiest functions on the host (69,600 a second to 9,400).
-- **The branches merged:** N6 (the engine's render boundary; mesh draws now recognised with the
-  recompiled library too) and the iPhone proof of concept (its code behind `TARGET_OS_IPHONE`).
+Main is 0.9.2, plus:
 
 - **R4** (bloodborne-recomp's `annotations/`): the engine's render boundary, the draw state,
   models, meshes, materials, shader programs, the synchronization primitives and the 20 busiest

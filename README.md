@@ -84,7 +84,7 @@ The [installation guide](docs/guide/installation.md) has the details.
 
 ## Status
 
-**Experimental, playable.** The latest release is **0.9.1**, with the native Metal renderer by
+**Experimental, playable.** The latest release is **0.9.2**, with the native Metal renderer by
 default, online play, the save editor and the game's code compiled for your Mac on request. On an
 Apple M3 Pro at native 1080p the game runs at about **40 FPS** in play with the Metal renderer
 (median 42 over a 3-hour new game; [performance](docs/guide/performance.md)). Only one Mac has
