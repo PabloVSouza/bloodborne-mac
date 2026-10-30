@@ -142,6 +142,10 @@ Where each landed; the release notes say what changed for players.
   adapter (A0–A6, M1–M4), native startup without Vulkan or MoltenVK; the default since 0.9.0 RC 1,
   accepted as N5 (the maintainer, 2026-10-29). MoltenVK stays selectable as a fallback until the
   maintainer decides whether it leaves the macOS app.
+- Lossless texture compression (2026-10-30, runtime `316e0eb2`): textures made without the
+  ShaderWrite and PixelFormatView usages until a view needs one, so Apple GPUs compress them; +33%
+  FPS in Iosefka's Clinic on an M3 Pro (48.0–49.2 against 36.3–36.7). Adapted from [MojahedAbushawish](https://github.com/MojahedAbushawish)'s lazy
+  texture usages for Wooloomooloo2's [bloodborne_mac_port](https://github.com/Wooloomooloo2/bloodborne_mac_port) (#33).
 - MetalFX (runtime PR #2) on the native frame; FSR 4.1.1 on the Mac's GPU with the MoltenVK renderer
   (runtime #1, 0.8.3).
 - N0 (scope), N1 (frame planning: deferred clears).

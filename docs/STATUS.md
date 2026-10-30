@@ -15,7 +15,9 @@ own status: [runtime](https://github.com/bloodborne-native/bloodborne-runtime/bl
   uses about 2 GB less memory ([notes](releases/v0.9.2.md)). 0.9.0 brought the native Metal
   renderer, online play, the save editor and the recompiled code page ([notes](releases/v0.9.0.md)).
 - **Playable** on Apple Silicon: about 40 FPS in play at native 1080p on an M3 Pro with the Metal
-  renderer ([performance](guide/performance.md)).
+  renderer in 0.9.2 ([performance](guide/performance.md)). On `main`, lossless texture compression
+  (2026-10-30, adapted from [MojahedAbushawish](https://github.com/MojahedAbushawish)'s lazy texture usages for Wooloomooloo2's [bloodborne_mac_port](https://github.com/Wooloomooloo2/bloodborne_mac_port), #33) gives
+  48.0–49.2 FPS standing in Iosefka's Clinic against 36.3–36.7.
 - **Now:** the native renderer (the maintainer's focus from 2026-10-29): N2, shaders built to
   read the engine's draw state instead of the PS4 user data, then the game's shaders built ahead
   of time as native shaders for each platform. The Metal renderer (N5) is accepted (2026-10-29).

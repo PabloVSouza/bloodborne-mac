@@ -87,8 +87,10 @@ The [installation guide](docs/guide/installation.md) has the details.
 **Experimental, playable.** The latest release is **0.9.2**, with the native Metal renderer by
 default, online play, the save editor and the game's code compiled for your Mac on request. On an
 Apple M3 Pro at native 1080p the game runs at about **40 FPS** in play with the Metal renderer
-(median 42 over a 3-hour new game; [performance](docs/guide/performance.md)). Only one Mac has
-been measured so far: results on other Macs are welcome.
+(median 42 over a 3-hour new game; [performance](docs/guide/performance.md)). On `main`, lossless
+texture compression (adapted from [MojahedAbushawish](https://github.com/MojahedAbushawish)'s work for [bloodborne_mac_port](https://github.com/Wooloomooloo2/bloodborne_mac_port)) raises it by a third: 48–49 FPS standing
+in Iosefka's Clinic, against 36–37. Only one Mac has been measured so far: results on other Macs
+are welcome.
 
 | | Progress | |
 |---|---|---|

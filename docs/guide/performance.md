@@ -18,7 +18,9 @@ compression):
   the renderer and memory work, and FSR 3.1 now costs more than it saves. Use them above 1080p
   output, where native resolution would need too much memory
   ([recommended settings](settings.md#recommended-settings)).
-- The Metal renderer is about 60% faster than MoltenVK at native 1080p.
+- The Metal renderer is about 60% faster than MoltenVK at native 1080p. A third of that is
+  lossless texture compression (from 36.3–36.7 to 48.0–49.2 FPS), adapted from [MojahedAbushawish](https://github.com/MojahedAbushawish)'s work for
+  Wooloomooloo2's [bloodborne_mac_port](https://github.com/Wooloomooloo2/bloodborne_mac_port): textures are made so that Apple GPUs can compress them.
 - The Metal renderer's upscaler is MetalFX; FSR 3.1 and FSR 4.1.1 are offered with the MoltenVK
   renderer ([settings](settings.md)).
 - Character motion vectors cost a few FPS with an upscaler.
