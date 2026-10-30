@@ -28,7 +28,9 @@ In this order (maintainer, 2026-10-29: the native renderer first):
    runs it, and for anything it did not foresee, shaders convert at first use as now. Its steps are in the runtime's
    [NATIVE_RENDERER.md](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md#n2-shaders-from-the-draw-state-then-ahead-of-time).
 2. **Memory for Macs with 8 and 16 GB** (runtime): a 16 GB M1 Pro ran out of memory in the
-   Forbidden Woods ([#8](https://github.com/bloodborne-native/bloodborne-mac/issues/8)), and 8 GB
+   Forbidden Woods with the MoltenVK renderer
+   ([#8](https://github.com/bloodborne-native/bloodborne-mac/issues/8), closed: not with the
+   default Metal renderer), and 8 GB
    Macs are still sold. Main's peak footprint is 5.7 GB in Iosefka's Clinic (7.8 GB before the
    recompiled library stopped keeping the game decoded); next, the iPhone's compact memory layout
    as a Mac mode (the game's memory as one file mapping, Metal's view of it, nothing pinned), each

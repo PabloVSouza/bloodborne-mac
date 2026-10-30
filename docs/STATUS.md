@@ -21,8 +21,9 @@ own status: [runtime](https://github.com/bloodborne-native/bloodborne-runtime/bl
 - **Now:** the native renderer (the maintainer's focus from 2026-10-29): N2, shaders built to
   read the engine's draw state instead of the PS4 user data, then the game's shaders built ahead
   of time as native shaders for each platform. The Metal renderer (N5) is accepted (2026-10-29).
-- **Memory for smaller Macs:** a 16 GB M1 Pro ran out of memory in the Forbidden Woods
-  ([#8](https://github.com/bloodborne-native/bloodborne-mac/issues/8)). The game's peak footprint
+- **Memory for smaller Macs:** a 16 GB M1 Pro ran out of memory in the Forbidden Woods with the
+  MoltenVK renderer ([#8](https://github.com/bloodborne-native/bloodborne-mac/issues/8), closed:
+  the default Metal renderer does not run out there). The game's peak footprint
   in Iosefka's Clinic is down from 7.8 GB to 5.7 GB on main (the recompiled library no longer keeps
   the whole game decoded); next, the iPhone's compact memory layout as a Mac mode, toward 8 GB Macs.
 - **The recompiler's CPU work:** calls left to the translator down from 69,600 a second to 9,400;
@@ -104,10 +105,6 @@ Main is 0.9.2, plus:
 
 - **Known bugs:** blood on already killed enemies can look pale after a save reload; the camera
   after a cutscene sometimes starts in front of the character. Causes not isolated.
-- **Out of memory on a 16 GB Mac** in the Forbidden Woods
-  ([#8](https://github.com/bloodborne-native/bloodborne-mac/issues/8)), with the MoltenVK renderer:
-  waiting for the reporter's log; main's lower footprint and the compact memory layout are the
-  fixes in progress.
 - **The GXRenderThread crash** at `0x2169edc`
   ([#7](https://github.com/bloodborne-native/bloodborne-mac/issues/7)): guarded on main, kept open
   until a long session passes without it.
