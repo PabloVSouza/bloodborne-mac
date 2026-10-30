@@ -21,7 +21,7 @@ own status: [runtime](https://github.com/bloodborne-native/bloodborne-runtime/bl
   of time as native shaders for each platform. The Metal renderer (N5) is accepted (2026-10-29).
 - **Memory for smaller Macs:** a 16 GB M1 Pro ran out of memory in the Forbidden Woods
   ([#8](https://github.com/bloodborne-native/bloodborne-mac/issues/8)). The game's peak footprint
-  in Cathedral Ward is down from 7.8 GB to 5.7 GB on main (the recompiled library no longer keeps
+  in Iosefka's Clinic is down from 7.8 GB to 5.7 GB on main (the recompiled library no longer keeps
   the whole game decoded); next, the iPhone's compact memory layout as a Mac mode, toward 8 GB Macs.
 - **The recompiler's CPU work:** calls left to the translator down from 69,600 a second to 9,400;
   what is left (memory ordering) waits for the maintainer's conditions.
@@ -84,7 +84,7 @@ Main is 0.9.2, plus:
 
 | Part | Native now | Still not native |
 |---|---|---|
-| The game's code | With the recompiled library: 240,975 of 241,031 functions as arm64 code compiled on the player's Mac, 99% of instructions in C; 9,400 calls a second still reach the translator (Cathedral Ward) | The library is opt-in (the translator is the default); the game's own C library and file-streaming modules (libc.prx, libSceFios2.prx) run translated, their busiest functions replaced by host code |
+| The game's code | With the recompiled library: 240,975 of 241,031 functions as arm64 code compiled on the player's Mac, 99% of instructions in C; 9,400 calls a second still reach the translator (Iosefka's Clinic) | The library is opt-in (the translator is the default); the game's own C library and file-streaming modules (libc.prx, libSceFios2.prx) run translated, their busiest functions replaced by host code |
 | The PS4's system services | Threads, memory, files, saves, input, audio, network and trophies are the runtime's host code; no PS4 firmware | libc.prx and libSceFios2.prx, above |
 | Graphics | R5 at 80%: every frame drawn by Metal directly, without Vulkan or MoltenVK; the GCN shaders converted to Metal once and cached (they stay converted, by the maintainer's decision) | The game still writes PS4 GPU command buffers that the runtime decodes each frame (about 0.6 core); N2 (shaders reading the engine's draw state, then ahead of time) and N3 (textures as objects) |
 | Platforms | macOS released | iOS a proof of concept; Linux the runtime only |

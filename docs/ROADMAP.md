@@ -29,12 +29,12 @@ In this order (maintainer, 2026-10-29: the native renderer first):
    [NATIVE_RENDERER.md](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md#n2-shaders-from-the-draw-state-then-ahead-of-time).
 2. **Memory for Macs with 8 and 16 GB** (runtime): a 16 GB M1 Pro ran out of memory in the
    Forbidden Woods ([#8](https://github.com/bloodborne-native/bloodborne-mac/issues/8)), and 8 GB
-   Macs are still sold. Main's peak footprint is 5.7 GB in Cathedral Ward (7.8 GB before the
+   Macs are still sold. Main's peak footprint is 5.7 GB in Iosefka's Clinic (7.8 GB before the
    recompiled library stopped keeping the game decoded); next, the iPhone's compact memory layout
    as a Mac mode (the game's memory as one file mapping, Metal's view of it, nothing pinned), each
    step measured in footprint and FPS.
 3. **N3, textures as objects** (runtime): textures taken as the objects the engine creates and
-   releases, without a second copy of each in Metal (about 1–1.5 GB in Cathedral Ward).
+   releases, without a second copy of each in Metal (about 1–1.5 GB in Iosefka's Clinic).
 4. **The recompiler's memory ordering** (recomp): ordering kept only around the engine's
    synchronization, which R4.4 named, with the maintainer's conditions (the generator's analysis,
    a safety case and a long play session). The rest of its CPU work is measured: calls left to the
