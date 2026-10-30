@@ -45,7 +45,8 @@ Changes taken from other ports of bbport, with thanks (details and commits in th
   persistence and robustness fixes.
 - [**MaSieS4Fun/ARM_bloodborne_pc**](https://github.com/MaSieS4Fun/ARM_bloodborne_pc) and
   [**ducvd89/Bloodborne-Android**](https://github.com/ducvd89/Bloodborne-Android): the portable
-  shader-resource walker for arm64.
+  shader-resource walker for arm64; and the design the touch controls follow (Bloodborne-Android's
+  on-screen controller: the camera turned from where the finger lands).
 - [**maze1377**](https://github.com/maze1377), porting our texture-collector fix to
   [**SpartanPort**](https://github.com/FelipePrado0/SpartanPort/pull/1124) (PR #1124): a
   correction to it, so images whose data a later GPU write already holds are not kept.
