@@ -38,7 +38,9 @@ Changes taken from other ports of bbport, with thanks (details and commits in th
   the direct Metal renderer's shader compiler and rewrites, pipeline-state cache and
   Vulkan-to-Metal format/state tables, adapted here through Wooloomooloo2's port.
 - [**Wooloomooloo2/bloodborne_mac_port**](https://github.com/Wooloomooloo2/bloodborne_mac_port):
-  further Metal integration and development, including the command layer and frame encoder.
+  further Metal integration and development, including the command layer and frame encoder; and
+  lossless texture compression, from [**MojahedAbushawish**](https://github.com/MojahedAbushawish)'s
+  lazy texture usages there (#33, merged by Mark Hall): +33% FPS on an M3 Pro.
 - [**Supermedo/bloodborne_pc**](https://github.com/Supermedo/bloodborne_pc): trophy event
   persistence and robustness fixes.
 - [**MaSieS4Fun/ARM_bloodborne_pc**](https://github.com/MaSieS4Fun/ARM_bloodborne_pc) and
