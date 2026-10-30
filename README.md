@@ -119,7 +119,7 @@ after a cutscene sometimes starts in front of your character. See
 
 ## Under the hood
 
-The app is built from four repositories:
+The app is built from four repositories; a fifth, [bloodborne-ios](https://github.com/bloodborne-native/bloodborne-ios), runs the game on the iPhone:
 
 | Repository | |
 |---|---|
@@ -127,6 +127,7 @@ The app is built from four repositories:
 | [bloodborne-launcher](https://github.com/bloodborne-native/bloodborne-launcher) | The independent launcher source, included here as `launcher/` |
 | [bloodborne-runtime](https://github.com/bloodborne-native/bloodborne-runtime) | Loads the game and PS4 system libraries; native Metal is the macOS default, with MoltenVK as a fallback, here as `runtime/` |
 | [bloodborne-recomp](https://github.com/bloodborne-native/bloodborne-recomp) | bbcpu, which translates the game's x86-64 code to arm64 as it runs, and the recompiler (`runtime/recomp/`) |
+| [bloodborne-ios](https://github.com/bloodborne-native/bloodborne-ios) | The iPhone app, a proof of concept built and installed from your own Mac: the launcher with the game inside |
 
 **The recompiler** turns the game's code, from the player's own copy, into native code ahead of
 time, checked against calls recorded from the original. Every one of the game's functions is
