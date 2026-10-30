@@ -98,8 +98,7 @@ update checks compare correctly.
    and `src-tauri/tauri.conf.json`; `bash packaging/version.sh --check` reports whether they agree
    (the workflow does it against the tag).
 2. Write `docs/releases/vX.Y.Z.md`: what changed for players, known issues, how to install.
-3. Test this build: copied-save gameplay (`runtime/tools/test_run.sh`) and a new save through the
-   opening video (`runtime/tools/test_opening_video.sh`); the maintainer approves.
+3. Test this build: copied-save gameplay (`runtime/tools/test_run.sh`); the maintainer approves.
 4. Commit and push `main`, run the workflow on it (`gh workflow run macos.yml --ref main`; pushes do
    not build) and check that it passes. The workflow keeps the built dependencies and a compiler
    cache between runs, so a run recompiles only what changed; with empty caches (or after a
