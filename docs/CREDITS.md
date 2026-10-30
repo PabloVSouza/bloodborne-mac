@@ -47,9 +47,8 @@ Changes taken from other ports of bbport, with thanks (details and commits in th
   [**ducvd89/Bloodborne-Android**](https://github.com/ducvd89/Bloodborne-Android): the portable
   shader-resource walker for arm64.
 - [**maze1377**](https://github.com/maze1377), porting our texture-collector fix to
-  [**SpartanPort**](https://github.com/FelipePrado0/SpartanPort/pull/1124) (PR #1124): two
-  corrections to it, so the GPU-only lighting images it keeps are released over the critical
-  memory mark.
+  [**SpartanPort**](https://github.com/FelipePrado0/SpartanPort/pull/1124) (PR #1124): a
+  correction to it, so images whose data a later GPU write already holds are not kept.
 
 - [**bmy/bbport-mac**](https://github.com/bmy/bbport-mac) (Rosetta 2 port of bbport to macOS):
   - the Retina-resolution window (bloodborne-runtime's `gpu/shim/window.cpp`, `BB_RETINA`);
