@@ -3,13 +3,14 @@
 [← Documentation](../README.md)
 
 Measured on an Apple M3 Pro (18-core GPU, 18 GB) with a 1080p output, on the current code
-(2026-10-24 and 25):
+(2026-10-24 and 25; the Metal renderer's native row 2026-10-30, with lossless texture
+compression):
 
 | Where | Renderer | Setting | FPS |
 |---|---|---|---|
-| Cathedral Ward, standing (about 1,660 draws a frame) | MoltenVK | Native 1080p, no upscaler | 30.6 |
+| Iosefka's Clinic, standing (about 1,660 draws a frame) | MoltenVK | Native 1080p, no upscaler | 30.6 |
 | The same | MoltenVK | FSR 3.1 *Balanced* | 27.6 |
-| The same | Metal | Native 1080p, no upscaler | 38.2–39.6 |
+| The same | Metal | Native 1080p, no upscaler | 48.0–49.2 |
 | The same | Metal | MetalFX *Quality* / *Balanced* | 31.7 / 33.5 |
 | A new game, 3 h 26 min of play | Metal | Native 1080p, no upscaler | median 42.2 (37 or more 90% of the time) |
 
@@ -17,7 +18,7 @@ Measured on an Apple M3 Pro (18-core GPU, 18 GB) with a 1080p output, on the cur
   the renderer and memory work, and FSR 3.1 now costs more than it saves. Use them above 1080p
   output, where native resolution would need too much memory
   ([recommended settings](settings.md#recommended-settings)).
-- The Metal renderer is about 25–30% faster than MoltenVK at native 1080p.
+- The Metal renderer is about 60% faster than MoltenVK at native 1080p.
 - The Metal renderer's upscaler is MetalFX; FSR 3.1 and FSR 4.1.1 are offered with the MoltenVK
   renderer ([settings](settings.md)).
 - Character motion vectors cost a few FPS with an upscaler.

@@ -53,7 +53,7 @@ come from the game (`runtime/tools/grab.sh`), in English, never from the user's 
   heap and a longer startup deadline; recomp's CLAUDE.md has the details). Its output is game
   code: use it to understand, never commit it or paste it into docs, issues or wikis.
 - An Apple M3 Pro (18 GB): a healthy run with the defaults (Metal renderer, native 1080p, no
-  upscaler) reads 38.2–39.6 FPS standing in Iosefka's Clinic (the runtime's `docs/BUILDING.md`).
+  upscaler) reads 48.0–49.2 FPS standing in Iosefka's Clinic (the runtime's `docs/BUILDING.md`).
 - The old `PabloVSouza/bloodborne_mac` repository only points to the four repositories.
 
 ## Working rules (all four repositories)
