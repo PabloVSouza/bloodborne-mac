@@ -89,25 +89,32 @@ In this order (maintainer, 2026-10-29: the native renderer first):
 - Background shader compilation: a missing pipeline compiles on a worker and its draw is skipped
   until ready, behind a setting.
 
-**iOS** (the proof of concept: the game at 23 FPS at 960×540 on an iPhone 17 Pro Max, bound by
-the CPU without JIT; on `main` since 2026-10-29,
-[write-up](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/IOS_POC.md);
+**iOS** (a proof of concept, not the focus of development: it gains from the Mac's work on the
+shared runtime and launcher; [bloodborne-ios](https://github.com/bloodborne-native/bloodborne-ios),
+public since 2026-10-30, its [findings](https://github.com/bloodborne-native/bloodborne-ios/blob/main/docs/FINDINGS.md);
+the runtime's [write-up](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/IOS_POC.md);
 how code is organized: [Architecture](ARCHITECTURE.md#where-code-lives)):
 
 1. Done (2026-10-29): the proof of concept merged to `main`, its platform code behind
    `TARGET_OS_IPHONE` (the game's mutex as host code stays iOS-only: it costs on the Mac), its
    general fixes for every platform (hashing without the decode cache, no JIT on iOS, the UI
-   scale). bloodborne-ios builds from the runtime's `main` too (its core and GPU library compile;
-   not yet run on the phone from it).
-2. The iOS platform code in the runtime's platform layer behind an `ios-arm64` CMake preset and a
+   scale).
+2. Done (2026-10-30): one app. The launcher's iOS app runs the game in its own process (launcher
+   `87e372d` to `b266315`), with its settings, the screen's own shape and touch controls (runtime
+   `f7ddfe48`, `fbaaaae6`); the game prepared and patched on the phone.
+3. Partly done: the runtime's Python moved into C. The executable, its linked modules, the content
+   profile and the patches are built by the runtime at start (runtime `96173c7a` to `f104d743`);
+   `game_check.py` and `mods.py` remain. Then the runtime as a library with a small C API,
+   `bb-probe` a thin program around it.
+4. The address space: the game should survive the system drawing over it (a texture budget that
+   keeps room for the system without evicting GPU-only textures, then the runtime's largest
+   tables).
+5. The iOS platform code in the runtime's platform layer behind an `ios-arm64` CMake preset and a
    compile-only CI job: the compact memory layout as a named mode, the system call and Metal
    format differences.
-3. The runtime as a library with a small C API, `bb-probe` a thin program around it, and what
-   `run.sh` and the Python scripts do moved into the runtime or the launcher (the Mac gains too).
-4. bloodborne-ios (private while a proof of concept): the launcher as its interface (Tauri on iOS,
-   the game in the same process), game files and saves on the phone, touch controls.
-5. Toward 30 FPS on the phone: thread QoS, the PS4's own libraries through the recompiler, other
-   spinning waits, MetalFX at a lower render resolution.
+6. Less CPU work for the same frames, since heat limits the frame rate (capped at 30 it holds 30;
+   uncapped it falls from 38–42 FPS as the phone heats): the PS4's own libraries through the
+   recompiler, other spinning waits.
 
 ## Not taken
 
@@ -180,7 +187,9 @@ translator calls 69,600 a second to 9,400).
 **Release candidates learn of newer releases** (launcher `9466d2d`): a candidate build carries its
 tag and checks candidates too, so it is told about the next candidate and the final release.
 
-**Releases:** 0.9.2 (2026-10-29): the recompiled-code build fixed (app issue #9), bbport 0.7's cloth,
+**Releases:** 0.9.3 (2026-10-30): lossless texture compression (about a third faster on Metal),
+the frame-preparation threads on the fast cores, the recompiled library kept across updates and
+updated in place. 0.9.2 (2026-10-29): the recompiled-code build fixed (app issue #9), bbport 0.7's cloth,
 play time and `0x2169edc` guard, about 2 GB less memory with the recompiled code. 0.9.1 (2026-10-28): the shader cache fix for black walls after long play (app issue
 #7). 0.9.0 (2026-10-28): the release candidates' changes, the recompiled code page, a
 faster translator, game threads on the performance cores, the on-screen keyboard fix.

@@ -3,21 +3,22 @@
 [← Documentation](README.md)
 
 Where the whole project stands: what is released, what is on main, what is being worked on and
-what comes next. Updated 2026-10-29. The plan in order: [Roadmap](ROADMAP.md). Each repository's
+what comes next. Updated 2026-10-30. The plan in order: [Roadmap](ROADMAP.md). Each repository's
 own status: [runtime](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md#progress),
 [recompiler](https://github.com/bloodborne-native/bloodborne-recomp/blob/main/docs/RECOMPILATION.md#milestones),
 [launcher](https://github.com/bloodborne-native/bloodborne-launcher/blob/main/README.md#status).
 
 ## At a glance
 
-- **Released:** 0.9.2, on 2026-10-29: building the recompiled code works again, cloth no longer
-  flutters at high frame rates, the rare `0x2169edc` crash is guarded and the recompiled code
-  uses about 2 GB less memory ([notes](releases/v0.9.2.md)). 0.9.0 brought the native Metal
+- **Released:** 0.9.3, on 2026-10-30: about a third faster on the Metal renderer (lossless
+  texture compression), less processor time, and a recompiled library that survives updates and
+  is updated in seconds to minutes instead of rebuilt ([notes](releases/v0.9.3.md)). 0.9.0 brought the native Metal
   renderer, online play, the save editor and the recompiled code page ([notes](releases/v0.9.0.md)).
-- **Playable** on Apple Silicon: about 40 FPS in play at native 1080p on an M3 Pro with the Metal
-  renderer in 0.9.2 ([performance](guide/performance.md)). On `main`, lossless texture compression
-  (2026-10-30, adapted from [MojahedAbushawish](https://github.com/MojahedAbushawish)'s lazy texture usages for Wooloomooloo2's [bloodborne_mac_port](https://github.com/Wooloomooloo2/bloodborne_mac_port), #33) gives
-  48.0–49.2 FPS standing in Iosefka's Clinic against 36.3–36.7.
+- **Playable** on Apple Silicon: 48.0–49.2 FPS standing in Iosefka's Clinic at native 1080p on an
+  M3 Pro with the Metal renderer in 0.9.3, against 36.3–36.7 before lossless texture compression
+  (adapted from [MojahedAbushawish](https://github.com/MojahedAbushawish)'s lazy texture usages for
+  Wooloomooloo2's [bloodborne_mac_port](https://github.com/Wooloomooloo2/bloodborne_mac_port), #33)
+  ([performance](guide/performance.md)).
 - **Now:** the native renderer (the maintainer's focus from 2026-10-29): N2, shaders built to
   read the engine's draw state instead of the PS4 user data, then the game's shaders built ahead
   of time as native shaders for each platform. The Metal renderer (N5) is accepted (2026-10-29).
@@ -50,13 +51,14 @@ Each bar has 20 blocks, one per 5% of the milestone's defined steps.
 | N3 · textures as objects | 0% `░░░░░░░░░░░░░░░░░░░░` | After N2 |
 | **Platforms** | | |
 | macOS (Apple Silicon) | | Released |
-| iOS | proof of concept | iPhone 17 Pro Max, 960×540: 38–42 FPS uncapped in the first 20 s; capped at 30, it holds 30 once the phone throttles (2026-10-30). The steps to a real app are in the roadmap |
+| iOS | proof of concept | Not the focus of development. [bloodborne-ios](https://github.com/bloodborne-native/bloodborne-ios) (public, built and installed from the player's own Mac): the launcher's app runs the game in its own process, prepared and patched on the phone, with touch controls and the screen's own shape. iPhone 17 Pro Max, 960×540: 38–42 FPS uncapped in the first 20 s; capped at 30, it holds 30 once the phone throttles. The game can stop when the system draws over it: the address space of an app signed with a free Apple ID runs out ([findings](https://github.com/bloodborne-native/bloodborne-ios/blob/main/docs/FINDINGS.md)) |
 | Linux | runtime only | The Vulkan backend builds and passes its tests (manual CI); no app |
 
 ## Releases
 
 | Version | Highlights |
 |---|---|
+| 0.9.3 | About a third faster on the Metal renderer (lossless texture compression, MojahedAbushawish's work for bloodborne_mac_port); the frame-preparation threads on the fast cores; the recompiled library kept across updates and updated in place; the hooked functions compiled too; a damaged pipeline cache recovered from |
 | 0.9.2 | The recompiled-code build fixed (it starts, survives leaving the page, counts as it compiles, Cancel stops it all); cloth at high frame rates and the play time (bbport 0.7); the `0x2169edc` crash guarded (bbport 0.7); about 2 GB less memory and fewer translator calls with the recompiled code |
 | 0.9.1 | The shader cache no longer reuses a shader's slot, which drew walls and scenery black after long play; caches are rebuilt once; the draw-preparation threads about 10% less busy |
 | 0.9.0 | The release candidates' changes; the recompiled code page (the library built on the player's Mac); a faster translator; the game's threads on the performance cores; the on-screen keyboard no longer reopens after a name is typed |
@@ -74,14 +76,19 @@ ported by hand (the runtime's [Upstream](https://github.com/bloodborne-native/bl
 
 ## On main
 
-Main is 0.9.2, plus:
+Main is 0.9.3, plus:
 
-- **R4** (bloodborne-recomp's `annotations/`): the engine's render boundary, the draw state,
-  models, meshes, materials, shader programs, the synchronization primitives and the 20 busiest
-  functions, named and described for N6 and the generator. `BB_DRAW_CENSUS=1` (runtime) counts the
-  game's draws and locks at that boundary.
-- **CI caches:** the app's and the runtime's workflows keep the built dependencies and a compiler
-  cache between runs: a release build takes about 25 minutes instead of 60.
+- **The executable and the patches prepared in C** (runtime `src/runtime_prepare.c`,
+  `src/runtime_patches.c`): the game builds them at start, without Python; `bb-patches` checks the
+  C against `scripts/patches.py` byte for byte.
+- **Touch controls** (runtime): on-screen sticks and buttons on a touch screen without a gamepad,
+  in the menu's colours (design after ducvd89/Bloodborne-Android); `BB_TOUCH_CONTROLS`, and on the
+  iPhone the launcher's Controls page, turns them off or on.
+- **Aspect ratio Auto** with the screen's own ratio at the usual heights.
+- **The Hunter's Dream:** sign-in with Discord in the launcher (SEKY443, launcher PR #5); its
+  callbacks run through bbcpu (runtime PR #9).
+- **Textures only the GPU holds are never evicted** for memory: they were drawn dark.
+- **The iPhone work** (above), from the same runtime and launcher.
 
 ## How native it is
 

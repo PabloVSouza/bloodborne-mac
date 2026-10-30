@@ -43,7 +43,7 @@ come from the game (`runtime/tools/grab.sh`), in English, never from the user's 
   `~/Library/Application Support/bloodborne_mac/` (never written by tests).
 - The clone is `~/projects/bloodborne/bloodborne-mac` (VS Code workspace:
   `~/projects/bloodborne/bloodborne.code-workspace`). `runtime/deps/` records absolute paths.
-  The iOS app is `~/projects/bloodborne/bloodborne-ios` (private; in the same workspace); its
+  The iOS app is `~/projects/bloodborne/bloodborne-ios` (public since 2026-10-30, a proof of concept; in the same workspace); its
   `runtime/deps` and `runtime/recomp/out` link to this clone's.
 - Metal System Traces need `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`.
 - **REA** (https://github.com/morluto/rea) is an MCP server here with the Ghidra provider

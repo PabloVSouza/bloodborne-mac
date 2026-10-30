@@ -28,18 +28,20 @@ proof of concept):
   each. There are no per-platform forks of the runtime.
 - **A platform's app repository is the app on that platform:** its shell, build and signing
   scripts, packaging, CI and releases, and what being an app there means (touch controls, file
-  sharing, system integration). bloodborne-mac is that for macOS; an iOS app would be
-  bloodborne-ios.
+  sharing, system integration). bloodborne-mac is that for macOS;
+  [bloodborne-ios](https://github.com/bloodborne-native/bloodborne-ios) for the iPhone (a proof
+  of concept).
 - **The launcher is one codebase for every platform:** its layout already works on phone-sized
   screens.
 
 The iOS proof of concept is on the runtime's and the recompiler's `main` since 2026-10-29: its
 platform code behind `TARGET_OS_IPHONE`, its general fixes for every platform
 ([write-up](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/IOS_POC.md)).
-It also showed what keeps the runtime from being embedded: it is a program (`bb-probe`) started by
-`run.sh`, which prepares the game with bash and Python. iOS allows one process and neither tool,
-so the runtime has to become a library with a small C API, with the preparation in the runtime or
-the launcher. The steps are in the [roadmap](ROADMAP.md).
+It also showed what keeps the runtime from being embedded: it was a program (`bb-probe`) started
+by `run.sh`, which prepared the game with bash and Python, and iOS allows one process and neither
+tool. The game now prepares and patches itself at start in C, and bloodborne-ios runs it inside
+the launcher's process; `game_check.py` and `mods.py` remain, then a small C API. The steps are in
+the [roadmap](ROADMAP.md).
 
 ## The app
 
