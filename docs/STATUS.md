@@ -49,7 +49,7 @@ Each bar has 20 blocks, one per 5% of the milestone's defined steps.
 | N3 · textures as objects | 0% `░░░░░░░░░░░░░░░░░░░░` | After N2 |
 | **Platforms** | | |
 | macOS (Apple Silicon) | | Released |
-| iOS | proof of concept | 23 FPS on an iPhone 17 Pro Max; the steps to a real app are in the roadmap |
+| iOS | proof of concept | iPhone 17 Pro Max, 960×540: 38–42 FPS uncapped in the first 20 s; capped at 30, it holds 30 once the phone throttles (2026-10-30). The steps to a real app are in the roadmap |
 | Linux | runtime only | The Vulkan backend builds and passes its tests (manual CI); no app |
 
 ## Releases
