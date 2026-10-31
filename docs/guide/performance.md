@@ -29,6 +29,13 @@ compression):
 - Only one Mac has been measured; results on other Macs are welcome in the
   [issues](https://github.com/bloodborne-native/bloodborne-mac/issues).
 
+## Compile shaders ahead of time
+
+**Compile shaders ahead of time** (on the **Recompiled code** page) has the game prepare its
+shaders the next time it starts, with progress on screen. It takes a few minutes, once, and you
+can stop and continue later. New effects then stop pausing the game the first time they appear.
+Loading into an area can still take a moment the first time.
+
 ## Recompiled code
 
 **Recompiled code** (in the launcher's menu, under Settings) compiles the game's code for your
