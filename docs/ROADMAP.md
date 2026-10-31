@@ -24,8 +24,10 @@ In this order (maintainer, 2026-10-29: the native renderer first):
    N2 builds them to read the draw state's slots instead: mesh draws first, then the other draw
    kinds. Then the game's shaders are built once, ahead of time, on the player's device, as native
    shaders for each platform (Metal libraries on macOS and iOS, SPIR-V for Vulkan): a launcher
-   step, like the recompiled-code build (the maintainer's decision, 2026-10-30). Until a player
-   runs it, and for anything it did not foresee, shaders convert at first use as now. Its steps are in the runtime's
+   step, like the recompiled-code build (the maintainer's decision, 2026-10-30), and a setting in
+   the recompiler settings that players enable if they want it, because it takes time (2026-10-31).
+   Until a player runs it, and for anything it did not foresee, shaders convert at first use as
+   now. Its steps are in the runtime's
    [NATIVE_RENDERER.md](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md#n2-shaders-from-the-draw-state-then-ahead-of-time).
 2. **Memory for Macs with 8 and 16 GB** (runtime): a 16 GB M1 Pro ran out of memory in the
    Forbidden Woods with the MoltenVK renderer
