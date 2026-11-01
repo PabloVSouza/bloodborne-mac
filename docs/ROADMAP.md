@@ -27,7 +27,8 @@ In this order (maintainer, 2026-10-29: the native renderer first):
    step, like the recompiled-code build (the maintainer's decision, 2026-10-30), and a setting in
    the recompiler settings that players enable if they want it, because it takes time; it skips what
    is already compiled and shows compiled of total (2026-10-31). The step and the setting are on
-   `main` for shaders; pipelines come next, from render states recorded on the player's device.
+   `main` for shaders, and for pipelines from render states noted on the player's device; what
+   remains is the shaders it still misses and measuring other areas.
    Until a player runs it, and for anything it did not foresee, shaders convert at first use as
    now. Its steps are in the runtime's
    [NATIVE_RENDERER.md](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md#n2-shaders-from-the-draw-state-then-ahead-of-time).

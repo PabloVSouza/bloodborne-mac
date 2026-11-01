@@ -34,7 +34,11 @@ compression):
 **Compile shaders ahead of time** (on the **Recompiled code** page) has the game prepare its
 shaders the next time it starts, with progress on screen. It takes a few minutes, once, and you
 can stop and continue later. New effects then stop pausing the game the first time they appear.
-Loading into an area can still take a moment the first time.
+
+The game also notes how it draws as you play, and uses that to prepare more the next time it
+starts, which takes less time than the first run and shortens pauses while loading. So the second
+start after you turn this on does the most good. It runs again now and then as you reach new
+places, with progress on screen.
 
 ## Recompiled code
 
