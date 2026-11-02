@@ -19,9 +19,9 @@ own status: [runtime](https://github.com/bloodborne-native/bloodborne-runtime/bl
   (adapted from [MojahedAbushawish](https://github.com/MojahedAbushawish)'s lazy texture usages for
   Wooloomooloo2's [bloodborne_mac_port](https://github.com/Wooloomooloo2/bloodborne_mac_port), #33)
   ([performance](guide/performance.md)).
-- **Now:** the native renderer (the maintainer's focus from 2026-10-29): N2, shaders built to
-  read the engine's draw state instead of the PS4 user data, then the game's shaders built ahead
-  of time as native shaders for each platform. The Metal renderer (N5) is accepted (2026-10-29).
+- **Now:** the native renderer (the maintainer's focus from 2026-10-29): N2, draws taken from
+  the engine's draw state instead of the PS4 user data (a developer switch today), then the game's
+  shaders built ahead of time, converted for each platform. The Metal renderer (N5) is accepted (2026-10-29).
 - **Memory for smaller Macs:** a 16 GB M1 Pro ran out of memory in the Forbidden Woods with the
   MoltenVK renderer ([#8](https://github.com/bloodborne-native/bloodborne-mac/issues/8), closed:
   the default Metal renderer does not run out there). The game's peak footprint
