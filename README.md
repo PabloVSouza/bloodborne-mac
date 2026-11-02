@@ -100,7 +100,7 @@ more, so this is where the project stands:
 | [PS4 GPU commands](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/gpu-commands.md) | `░░░░░░░░░░░░░░░░░░░░` 0% | The engine's draws are found; all of them are still decoded |
 | [PS4 user data](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/user-data.md) | `░░░░░░░░░░░░░░░░░░░░` 0% | Developer switch only |
 | [PS4 textures and memory](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/textures-memory.md) | `░░░░░░░░░░░░░░░░░░░░` 0% | Not started |
-| [The PS4's C and file libraries](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/c-libraries.md) | `░░░░░░░░░░░░░░░░░░░░` 0% | Their busiest functions are replaced |
+| [The PS4's C and file libraries](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/c-libraries.md) | `██████████████████░░` 94% | Functions recompiled; opt-in with the library |
 | [x86 memory ordering](https://github.com/bloodborne-native/bloodborne-recomp/blob/main/docs/layers/memory-ordering.md) | `░░░░░░░░░░░░░░░░░░░░` 0% | Not started; only arm64 needs this layer |
 | [The PS4 executable](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/executable.md) | `░░░░░░░░░░░░░░░░░░░░` 0% | The game still starts from it |
 
