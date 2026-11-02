@@ -117,8 +117,7 @@ Mac has been measured so far: results on other Macs are welcome.
 and less memory for Macs with 8 and 16 GB. Details: [Status](docs/STATUS.md) and
 [Roadmap](docs/ROADMAP.md).
 
-**Known issues:** blood on already killed enemies can look pale after a save reload; the camera
-after a cutscene sometimes starts in front of your character. See
+**Known issues:** blood on already killed enemies can look pale after a save reload. See
 [Troubleshooting](docs/guide/troubleshooting.md#known-issues).
 
 ## Documentation

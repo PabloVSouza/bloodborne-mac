@@ -30,8 +30,6 @@ Please do not report problems with this port to shadPS4 or to bbport.
 ## Known issues
 
 - **Blood on already killed enemies** can look pale with bright edges after reloading a save.
-- **The camera after a cutscene** sometimes starts in front of your character instead of behind
-  (for example when you wake up in the clinic). Move the camera to turn it around.
 
 ## Good to know
 

@@ -73,7 +73,6 @@ an opt-in setting.
 **Bugs** (causes not isolated):
 
 - Blood on already killed enemies can be pale with bright edges after a save reload.
-- The camera after an in-game cutscene sometimes starts in front of the character.
 - Five GPU tests (motion-shader, scene-resolution, taa-shader, camera-motion, translation-memory)
   no longer compile; they are listed in `runtime/gpu/CMakeLists.txt` instead of run.
 

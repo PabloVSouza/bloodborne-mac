@@ -23,9 +23,7 @@ own status: [runtime](https://github.com/bloodborne-native/bloodborne-runtime/bl
 - **Now:** the native renderer (the maintainer's focus from 2026-10-29): the draw-state work, draws taken from
   the engine's draw state instead of the PS4 user data (a developer switch today), then the game's
   shaders built ahead of time, converted for each platform. The Metal renderer (the Metal backend) is accepted (2026-10-29).
-- **Memory for smaller Macs:** a 16 GB M1 Pro ran out of memory in the Forbidden Woods with the
-  MoltenVK renderer ([#8](https://github.com/bloodborne-native/bloodborne-mac/issues/8), closed:
-  the default Metal renderer does not run out there). The game's peak footprint
+- **Memory for smaller Macs:** the game's peak footprint
   in Iosefka's Clinic is down from 7.8 GB to 5.7 GB on main (the recompiled library no longer keeps
   the whole game decoded); next, the iPhone's compact memory layout as a Mac mode, toward 8 GB Macs.
 - **The recompiler's CPU work:** calls left to the translator down from 69,600 a second to 9,400;
@@ -85,8 +83,8 @@ Main is 0.9.4, plus:
 
 ## Open issues
 
-- **Known bugs:** blood on already killed enemies can look pale after a save reload; the camera
-  after a cutscene sometimes starts in front of the character. Causes not isolated.
+- **Known bug:** blood on already killed enemies can look pale after a save reload. Cause not
+  isolated.
 - **The GXRenderThread crash** at `0x2169edc`
   ([#7](https://github.com/bloodborne-native/bloodborne-mac/issues/7)): guarded on main, kept open
   until a long session passes without it.
