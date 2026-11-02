@@ -12,6 +12,7 @@
 - [Status](STATUS.md): what is released and on main, every milestone's progress, what is being
   worked on now and what comes next.
 - [Roadmap](ROADMAP.md): the plan in order (now, next, later), and what is done.
+- [The PS4 layers](layers/README.md): what stands in for a PS4 today, what was done and what is left.
 
 ## Playing
 
