@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """packaging/discord_release.py TAG [NOTES]: posts a release to the Discord server's #releases
 channel. DISCORD_RELEASES_WEBHOOK is the channel's webhook URL (a repository secret; the release
-workflow calls this after `gh release create`). NOTES defaults to docs/releases/TAG.md: its heading
-is the title, its "What's new" list the post, with the download, the requirements and a link to
-the full notes. DRY_RUN=1 prints the message instead of sending it."""
+workflow calls this after `gh release create`). NOTES defaults to docs/releases/TAG.md: its summary,
+"What's new" list and "Feedback we need", "Known issues" and "Good to know" sections are the post.
+DRY_RUN=1 prints the message instead of sending it."""
 import json
 import os
 import pathlib
@@ -12,8 +12,8 @@ import sys
 import urllib.request
 
 REPO = 'bloodborne-native/bloodborne-mac'
-ICON = 'https://raw.githubusercontent.com/bloodborne-native/bloodborne-launcher/main/src-tauri/icons/128x128%402x.png'
-COLOR = 0x8B1A1A
+# Pinned to a commit: Discord keeps an image by its URL, so a changed icon needs a new URL.
+ICON = 'https://raw.githubusercontent.com/bloodborne-native/bloodborne-launcher/19f6178/src-tauri/icons/128x128%402x.png'
 
 
 def unwrap(lines):
@@ -53,38 +53,43 @@ def section(text, title):
     return []
 
 
+def plain(text):
+    """Discord's posts carry no links or bold from the notes: labels and words only."""
+    text = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', text)
+    return text.replace('**', '')
+
+
+def bullets(text):
+    return '\n'.join('• ' + line[2:] if line.startswith('- ') else line for line in text.splitlines())
+
+
+def post_section(text, title):
+    body = bullets(plain(unwrap(section(text, title))))
+    return f'{title}\n{body}' if body else ''
+
+
 def message(tag, notes):
+    """The project's release post: the version, one line, What's new, optional Feedback we need,
+    Known issues and Good to know, the download, how to update and go back, and the credit."""
     text = notes.read_text()
-    heading = text.splitlines()[0].lstrip('# ').strip()
-    summary = unwrap(section(text, None))
-    summary = re.sub(r"^What's new:\s*", '', summary)
-    if len(summary) > 3800:
-        summary = summary[:3800].rsplit('\n', 1)[0] + '\n…'
-    release = f'https://github.com/{REPO}/releases/tag/{tag}'
-    dmg = os.path.basename(os.environ.get('PACKAGE') or f'bloodborne_mac-{tag}-arm64.dmg')
-    fields = [
-        {'name': 'Download', 'value': f'[{dmg}](https://github.com/{REPO}/releases/download/{tag}/{dmg})',
-         'inline': False},
-        {'name': 'Requirements', 'value': 'A Mac with Apple Silicon (M1 or newer), macOS 15 or newer. '
-         'Your own Bloodborne dump with update 1.09.', 'inline': False},
-    ]
-    known = unwrap(section(text, 'Known issues'))
-    if known:
-        fields.append({'name': 'Known issues', 'value': known[:1024], 'inline': False})
-    fields.append({'name': 'Full notes', 'value': f'[{tag} on GitHub]({release})', 'inline': False})
-    return {
-        'username': 'bloodborne-native',
-        'avatar_url': ICON,
-        'embeds': [{
-            'title': heading,
-            'url': release,
-            'color': COLOR,
-            'description': summary,
-            'fields': fields,
-            'thumbnail': {'url': ICON},
-            'footer': {'text': 'Update: replace Bloodborne.app; saves and settings stay.'},
-        }],
-    }
+    summary = plain(unwrap(section(text, None)))
+    intro, _, listed = summary.partition("What's new:")
+    version = tag.lstrip('v').replace('-rc.', ' RC ')
+    back = re.search(r'install (\S+) again', text)
+    parts = [f'Version {version} is out 🩸', intro.strip(), "What's new\n" + bullets(listed.strip())]
+    for title in ('Feedback we need', 'Known issues', 'Good to know'):
+        part = post_section(text, title)
+        if part:
+            parts.append(part)
+    parts.append(f'Download: https://github.com/{REPO}/releases/tag/{tag}')
+    update = 'Replace Bloodborne.app; saves and settings are preserved.'
+    parts.append(update + (f' To go back, reinstall {back.group(1)}.' if back else ''))
+    parts.append('Built on bbport by @deadinside and shadPS4 ❤️')
+    content = '\n\n'.join(p for p in parts if p)
+    if len(content) > 2000:  # Discord's limit; the release page has the rest
+        content = content[:1900].rsplit('\n', 1)[0] + f'\n…\n\nFull notes: https://github.com/{REPO}/releases/tag/{tag}'
+    return {'username': 'bloodborne-native', 'avatar_url': ICON, 'content': content,
+            'allowed_mentions': {'parse': []}}
 
 
 def main():
