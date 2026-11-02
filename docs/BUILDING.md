@@ -108,7 +108,7 @@ update checks compare correctly.
    pre-release: release builds' update check skips it, candidate builds are told about it; its
    notes say it is a candidate and what feedback is wanted) and push the tag: `.github/workflows/macos.yml` builds the DMG and
    publishes the release with the notes, then posts it to the Discord server's `#releases`
-   (`packaging/discord_release.py`: the notes' heading, their "What's new" list and known issues;
+   (`packaging/discord_release.py`: the notes' summary, "What's new" list and known issues;
    the `DISCORD_RELEASES_WEBHOOK` secret). Check the run (`gh run list`), the release's asset and
    the post. `DRY_RUN=1 python3 packaging/discord_release.py vX.Y.Z` shows the post beforehand;
    `gh workflow run discord-release.yml -f tag=vX.Y.Z` posts it again from main's notes.
