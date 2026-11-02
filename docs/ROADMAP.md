@@ -10,6 +10,25 @@ Wooloomooloo2 macOS ports, DiAvisoo) are adopted only after an A/B on our build 
 and settings, alternating runs), and are credited in the same commit (CREDITS, the wiki, the
 commit message, a code comment; the runtime's `docs/UPSTREAM.md` records them).
 
+## The PS4 layers
+
+The goal is a game that is truly native: nothing between it and the platform pretends to be a PS4.
+These are the layers that do that today, and how much of each has been replaced. Each row says what
+its percentage counts, and bars have 20 blocks, one per 5%. The rows measure different things, so
+they are not averaged into one number.
+
+| Layer | What it does | Native | What the number counts | What is left |
+|---|---|---|---|---|
+| **The game's code** | PS4 x86-64 code translated while the game runs | 96% `███████████████████░` | 10,861,735 of 11,268,132 instructions recompiled; opt-in, the translator is still the default | The default; import stubs and code rewritten while running |
+| **The PS4's C and file libraries** | `libc.prx` and `libSceFios2.prx` run as game code | 0% `░░░░░░░░░░░░░░░░░░░░` | 0 of 2 modules recompiled; their busiest functions are replaced by host code | Recompile or replace them |
+| **The PS4's system** | Threads, memory, files, saves, input, audio, network, trophies | 100% `████████████████████` | No PS4 firmware runs: the runtime's host code answers them | The game still calls them through PS4 interfaces |
+| **The graphics API** | Drawing through a translation to the platform's GPU API | 100% `████████████████████` | N4 and N5: Metal directly, without Vulkan or MoltenVK | Vulkan on other platforms is the backend already kept |
+| **PS4 GPU commands** | The game writes PS4 command buffers, decoded each frame | 50% `██████████░░░░░░░░░░` | 1 of 2 steps: the engine's draws found (N6, 99.94% matched); taking them over is not done | N2's draw kinds, then no decoding |
+| **PS4 shaders** | GCN shaders converted to each platform | 75% `███████████████░░░░░` | N2's steps; converted once ahead of time as an option | The forms N2.5 still misses, Vulkan's build path |
+| **PS4 textures and memory** | Textures inferred from GPU memory and held twice | 0% `░░░░░░░░░░░░░░░░░░░░` | N3 not started | Textures as the objects the engine creates |
+| **x86 memory ordering** | Every load and store keeps x86's ordering on arm64 | 0% `░░░░░░░░░░░░░░░░░░░░` | Not started, and not needed on x86-64 | Ordering kept only around the engine's synchronization |
+| **The PS4 executable** | The game starts from a PS4 executable, prepared and patched in memory | 0% `░░░░░░░░░░░░░░░░░░░░` | The game still starts from it, with the recompiled library loaded into it | A game that starts as a native program |
+
 ## Now
 
 - **N2, the native renderer's next step** (the first item of Next, below), the maintainer's focus
