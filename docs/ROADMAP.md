@@ -13,16 +13,17 @@ commit message, a code comment; the runtime's `docs/UPSTREAM.md` records them).
 ## The PS4 layers
 
 The goal is a game that is truly native: nothing between it and the platform pretends to be a PS4.
-These are the layers that do that today, and how much of each has been replaced. Each row says what
-its percentage counts, and bars have 20 blocks, one per 5%. The rows measure different things, so
-they are not averaged into one number.
+These are the layers that do that today, and how much of each has been replaced. A layer counts as
+native only when nothing in it is translated any more: replacing part of a translation does not
+make it native. Each row says what its percentage counts, and bars have 20 blocks, one per 5%. The
+rows measure different things, so they are not averaged into one number.
 
 | Layer | What it does | Native | What the number counts | What is left |
 |---|---|---|---|---|
 | **[The game's code](layers/game-code.md)** | PS4 x86-64 code translated while the game runs | 96% `███████████████████░` | 10,861,735 of 11,268,132 instructions recompiled; opt-in, the translator is still the default | The default; import stubs and code rewritten while running |
 | **[The PS4's C and file libraries](layers/c-libraries.md)** | `libc.prx` and `libSceFios2.prx` run as game code | 0% `░░░░░░░░░░░░░░░░░░░░` | 0 of 2 modules recompiled; their busiest functions are replaced by host code | Recompile or replace them |
-| **[The PS4's system](layers/system.md)** | Threads, memory, files, saves, input, audio, network, trophies | 100% `████████████████████` | No PS4 firmware runs: the runtime's host code answers them | The game still calls them through PS4 interfaces |
-| **[The graphics API](layers/graphics-api.md)** | Drawing through a translation to the platform's GPU API | 100% `████████████████████` | N4 and N5: Metal directly, without Vulkan or MoltenVK | Vulkan on other platforms is the backend already kept |
+| **[The PS4's system](layers/system.md)** | Threads, memory, files, saves, input, audio, network, trophies | 0% `░░░░░░░░░░░░░░░░░░░░` | The game still makes PS4 system calls, and the runtime translates each one. No PS4 firmware runs: all of the answers are our code | Recompiled code calling the platform directly |
+| **[The renderer](layers/renderer.md)** | PS4 commands and shaders translated into Metal calls every frame | 0% `░░░░░░░░░░░░░░░░░░░░` | Every frame is still translated. One translation is gone: on macOS the renderer reaches Metal directly, without Vulkan or MoltenVK | The renderer working from the engine, not from PS4 commands: the rows below |
 | **[PS4 GPU commands](layers/gpu-commands.md)** | The game writes PS4 command buffers, decoded each frame | 0% `░░░░░░░░░░░░░░░░░░░░` | Every draw and dispatch is still decoded, with every switch. The engine's draws are found (N6, 99.94% matched), behind `BB_RENDER_BOUNDARY`, which no player build sets | Draws taken from the engine, then no decoding |
 | **[PS4 user data](layers/user-data.md)** | A walker reads each shader's resources the way the PS4 lays them out | 0% `░░░░░░░░░░░░░░░░░░░░` | The walker runs for every player. With `BB_RENDER_BOUNDARY=flat`, 92% of draw and 79% of dispatch shader stages skip it; the shaders themselves are unchanged and the walker still teaches the slots | On by default, and the rest of the draw kinds (N2.4) |
 | **[Shaders compiled during play](layers/shaders.md)** | PS4 shaders converted and compiled at first use | 86% `█████████████████░░░` | 253 of 295 sources one Clinic session used were already built; opt-in in the launcher, one area, standing still. Shaders stay converted from GCN, ahead of time, by decision | The remaining forms, other areas, Vulkan's build path |

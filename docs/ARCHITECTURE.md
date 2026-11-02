@@ -10,7 +10,7 @@ How the app is put together. Each part has its own docs; this page says which pa
 |---|---|---|
 | **bloodborne-mac** (this one) | | Packages the macOS app and its DMG, publishes releases, holds the player guides and the roadmap |
 | [bloodborne-launcher](https://github.com/bloodborne-native/bloodborne-launcher) | `launcher/` | The launcher (Tauri: React and Rust): profiles, saves, settings, mods, patches, starting the game and tracking trophies |
-| [bloodborne-runtime](https://github.com/bloodborne-native/bloodborne-runtime) | `runtime/` | Runs the game: loads its executable, provides the PS4 system libraries, draws on native Metal by default or MoltenVK as a fallback |
+| [bloodborne-runtime](https://github.com/bloodborne-native/bloodborne-runtime) | `runtime/` | Runs the game: loads its executable, provides the PS4 system libraries, draws on Metal by default or MoltenVK as a fallback |
 | [bloodborne-recomp](https://github.com/bloodborne-native/bloodborne-recomp) | `runtime/recomp/` | bbcpu, which runs the game's x86-64 code on arm64, and the recompiler that turns it into native code ahead of time |
 
 The runtime is built on [bbport](https://github.com/deadinside28/bloodborne_pc), the native Linux
@@ -87,12 +87,13 @@ is in [Status](STATUS.md#how-native-it-is):
   library on the player's Mac. R4 named the engine's render code, its synchronization and its
   busiest functions, which the next steps use
   ([Recompilation](https://github.com/bloodborne-native/bloodborne-recomp/blob/main/docs/RECOMPILATION.md)).
-- **The native renderer** draws with Metal directly on macOS, without Vulkan or MoltenVK (the
-  MoltenVK fallback stays selectable until N5 is accepted; Linux keeps its Vulkan backend), through
-  the project's own GPU interface, the render adapter. The goal is for the adapter to take the
+- **The native renderer** is the goal, not what runs today. The renderer reaches Metal directly on
+  macOS, without Vulkan or MoltenVK (MoltenVK stays selectable; Linux keeps its Vulkan backend),
+  through the project's own GPU interface, the render adapter, but every frame is still translated
+  from PS4 commands. The goal is for the adapter to take the
   engine's draws, with their draw state, instead of the PS4 command buffers the engine writes
-  under them. N6 found that boundary and every input of a draw in the engine's state; N2 builds the
-  shaders to read that state, then builds the game's shaders once, ahead of time, as native
+  under them. N6 found that boundary and every input of a draw in the engine's state; N2 takes draws from
+  that state (a developer switch today), then builds the game's shaders once, ahead of time, as native
   shaders for each platform (Metal on macOS and iOS, SPIR-V for Vulkan); N3 takes textures as the
   objects the engine creates, without a second copy of each
   ([Native renderer](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md)).

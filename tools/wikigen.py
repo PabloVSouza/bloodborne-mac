@@ -15,7 +15,7 @@ REPOS = {
         'docs/guide/troubleshooting.md': 'Troubleshooting', 'docs/guide/updates.md': 'Updates',
         'docs/layers/README.md': 'PS4-layers', 'docs/layers/game-code.md': 'Layer-game-code',
         'docs/layers/c-libraries.md': 'Layer-C-and-file-libraries', 'docs/layers/system.md': 'Layer-system',
-        'docs/layers/graphics-api.md': 'Layer-graphics-API', 'docs/layers/gpu-commands.md': 'Layer-GPU-commands',
+        'docs/layers/renderer.md': 'Layer-renderer', 'docs/layers/gpu-commands.md': 'Layer-GPU-commands',
         'docs/layers/user-data.md': 'Layer-user-data', 'docs/layers/shaders.md': 'Layer-shaders',
         'docs/layers/textures-memory.md': 'Layer-textures-and-memory',
         'docs/layers/memory-ordering.md': 'Layer-memory-ordering', 'docs/layers/executable.md': 'Layer-executable'},
@@ -23,7 +23,7 @@ REPOS = {
                       'Performance', 'Troubleshooting', 'Updates']),
          ('Project', ['Status', 'Roadmap']),
          ('The PS4 layers', ['PS4-layers', 'Layer-game-code', 'Layer-C-and-file-libraries', 'Layer-system',
-                             'Layer-graphics-API', 'Layer-GPU-commands', 'Layer-user-data', 'Layer-shaders',
+                             'Layer-renderer', 'Layer-GPU-commands', 'Layer-user-data', 'Layer-shaders',
                              'Layer-textures-and-memory', 'Layer-memory-ordering', 'Layer-executable']),
          ('Developing', ['Architecture', 'Building-and-releasing', 'Credits-and-licenses'])]),
     'runtime': ('bloodborne-runtime', {

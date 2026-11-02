@@ -19,10 +19,10 @@ The runtime answers those calls with its own code (`src/runtime_*.c`). No PS4 fi
 
 ## Where it stands
 
-100% of the system runs as host code. The game still reaches it through PS4 interfaces: it makes the
-calls a PS4 game makes, and the runtime translates what they mean.
+0%: no PS4 firmware runs, and all of the answers are our code, but the layer is still a translation.
+The game makes the calls a PS4 game makes, and the runtime turns each one into what the platform
+does.
 
 ## What is left
 
-Calling each platform directly from recompiled code, where that gains something, instead of going
-through the PS4's interfaces. Platform differences are in `src/platform.{c,h}`: Linux and macOS.
+Recompiled code calling each platform directly, instead of going through the PS4's interfaces. Platform differences are in `src/platform.{c,h}`: Linux and macOS.

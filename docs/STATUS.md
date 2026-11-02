@@ -32,7 +32,9 @@ own status: [runtime](https://github.com/bloodborne-native/bloodborne-runtime/bl
 
 ## Milestones
 
-Each bar has 20 blocks, one per 5% of the milestone's defined steps.
+Each bar has 20 blocks, one per 5% of the milestone's defined steps. A finished milestone is a
+finished step, not a native layer: how much of the game is native is in the
+[PS4 layers](ROADMAP.md#the-ps4-layers).
 
 | Milestone | Progress | State |
 |---|---|---|
@@ -45,9 +47,9 @@ Each bar has 20 blocks, one per 5% of the milestone's defined steps.
 | **Graphics** (bloodborne-runtime) | | |
 | N0 · scope, N1 · frame planning | 100% `████████████████████` | Deferred clears |
 | N4 · render adapter | 100% `████████████████████` | The renderer on the project's own GPU interface |
-| N5 · Metal backend | 100% `████████████████████` | Accepted (the maintainer, 2026-10-29); the default since 0.9.0 RC 1; MoltenVK selectable as a fallback |
+| N5 · Metal backend | 100% `████████████████████` | Accepted (the maintainer, 2026-10-29); the default since 0.9.0 RC 1; MoltenVK selectable as a fallback. Every frame is still PS4 commands translated into Metal calls |
 | N6 · the engine's render boundary | 100% `████████████████████` | Done (re-scoped 2026-10-28; on main since 2026-10-29): 99.94% of the engine's draws matched to their packets, their state and resources agreeing; every buffer address and resource slot found from the draw state; mesh draws bind their resources from it, with the translator or the recompiled library ([details](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md#n6-the-engines-render-boundary)). The other draw kinds move to N2: converted GCN shaders read the user data themselves, so taking draws over saves nothing until N2 |
-| N2 · shaders from the draw state, then native shaders ahead of time | 90% `██████████████████░░` | The plan, the inventory, N2.3 and most of N2.4: 92% of draw shader stages and 79% of compute dispatch stages run without the PS4 user data's walker, taking their resources from the engine's state or straight from the registers it sets (opt-in, `BB_RENDER_BOUNDARY=flat`; exact; the observer still costs about 45 CPU points) ([details](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md#n2-shaders-from-the-draw-state-then-ahead-of-time)). First-play stalls are down from 12 s to 7 s and the worst frame from 4.9 s to 2.0 s with translating ahead (opt-in, `BB_SHADER_AHEAD=1`). The optional compile step in the launcher's recompiler settings builds shaders from the game's files and pipelines from render states the player's sessions noted (worst frame of a first play in Iosefka's Clinic 1.9 s to 258 ms, one run, other areas not measured). Next: the last walker users and the shaders the step still misses |
+| N2 · shaders from the draw state, then native shaders ahead of time | in progress | The plan, the inventory, N2.3 and most of N2.4: 92% of draw shader stages and 79% of compute dispatch stages run without the PS4 user data's walker, taking their resources from the engine's state or straight from the registers it sets (opt-in, `BB_RENDER_BOUNDARY=flat`; exact; the observer still costs about 45 CPU points) ([details](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md#n2-shaders-from-the-draw-state-then-ahead-of-time)). First-play stalls are down from 12 s to 7 s and the worst frame from 4.9 s to 2.0 s with translating ahead (opt-in, `BB_SHADER_AHEAD=1`). The optional compile step in the launcher's recompiler settings builds shaders from the game's files and pipelines from render states the player's sessions noted (worst frame of a first play in Iosefka's Clinic 1.9 s to 258 ms, one run, other areas not measured). Next: the last walker users and the shaders the step still misses |
 | N3 · textures as objects | 0% `░░░░░░░░░░░░░░░░░░░░` | After N2 |
 | **Platforms** | | |
 | macOS (Apple Silicon) | | Released |
@@ -96,14 +98,14 @@ Main is 0.9.3, plus:
 |---|---|---|
 | The game's code | With the recompiled library: 240,975 of 241,031 functions as arm64 code compiled on the player's Mac, 99% of instructions in C; 9,400 calls a second still reach the translator (Iosefka's Clinic) | The library is opt-in (the translator is the default); the game's own C library and file-streaming modules (libc.prx, libSceFios2.prx) run translated, their busiest functions replaced by host code |
 | The PS4's system services | Threads, memory, files, saves, input, audio, network and trophies are the runtime's host code; no PS4 firmware | libc.prx and libSceFios2.prx, above |
-| Graphics | R5 at 80%: every frame drawn by Metal directly, without Vulkan or MoltenVK; the GCN shaders converted to Metal once and cached (they stay converted, by the maintainer's decision) | The game still writes PS4 GPU command buffers that the runtime decodes each frame (about 0.6 core); N2 (shaders reading the engine's draw state, then ahead of time) and N3 (textures as objects) |
+| Graphics | Nothing yet: on macOS frames reach Metal without Vulkan or MoltenVK, but each one is translated from PS4 commands; the GCN shaders converted to Metal once and cached (they stay converted, by the maintainer's decision) | The game still writes PS4 GPU command buffers that the runtime decodes each frame (about 0.6 core); N2 (shaders reading the engine's draw state, then ahead of time) and N3 (textures as objects) |
 | Platforms | macOS released | iOS a proof of concept; Linux the runtime only |
 
 ## Areas
 
 | Area | State |
 |---|---|
-| Graphics | Native Metal by default, without Vulkan or MoltenVK; MoltenVK selectable as a fallback; Vulkan on Linux. Upscalers: MetalFX with the Metal renderer; FSR 3.1 and FSR 4.1.1 (run on the Mac's GPU) with MoltenVK ([native renderer](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md)) |
+| Graphics | Metal by default, translated from the game's PS4 commands, without Vulkan or MoltenVK; MoltenVK selectable as a fallback; Vulkan on Linux. Upscalers: MetalFX with the Metal renderer; FSR 3.1 and FSR 4.1.1 (run on the Mac's GPU) with MoltenVK ([native renderer](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md)) |
 | Game features | bbport 0.6's frame rate through hooks (F3 for 30 FPS), live effects, aspect ratios, keyboard and mouse, Laurence's cinematic above 30 FPS |
 | Online | Seamless Hunt and The Hunter's Dream (the runtime's `bbnet20`, GPL-3.0-or-later); tested here without an account, players are testing both pools with 0.9.0 |
 | Launcher | Profiles and saves with backups; trophies; the save editor (attributes, items, weapons, armor, gems; an edited save earns no trophies and plays offline only); settings shared with the in-game menu; mods and patches; 20 languages; platform-neutral code with CI on macOS, Linux and Windows ([launcher docs](https://github.com/bloodborne-native/bloodborne-launcher/tree/main/docs)) |

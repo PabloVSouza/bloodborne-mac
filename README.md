@@ -84,7 +84,7 @@ The [installation guide](docs/guide/installation.md) has the details.
 
 ## Status
 
-**Experimental, playable.** The latest release is **0.9.2**, with the native Metal renderer by
+**Experimental, playable.** The latest release is **0.9.3**, with the Metal renderer by
 default, online play, the save editor and the game's code compiled for your Mac on request. On an
 Apple M3 Pro at native 1080p the game runs at about **40 FPS** in play with the Metal renderer
 (median 42 over a 3-hour new game; [performance](docs/guide/performance.md)). On `main`, lossless
@@ -94,11 +94,11 @@ are welcome.
 
 | | Progress | |
 |---|---|---|
-| CPU: recompiling the game's code (R0–R4) | `████████████████████` 100% | Every function runs recompiled; the engine's render code is named |
-| Graphics: the native renderer (N0–N6) | `████████████████░░░░` 80% | Native Metal by default; the engine's draws found at its own render boundary (N6); next, shaders built from the engine's draw state (N2) |
+| CPU: recompiling the game's code | `███████████████████░` 96% | 96% of its instructions, opt-in; the translator is the default; the engine's render code is named |
+| Graphics: rendering natively | `░░░░░░░░░░░░░░░░░░░░` 0% | Metal by default, with every frame still translated from PS4 commands; the engine's draws are found (N6), and taking them over is next |
 
-**Next:** the native renderer (N2: shaders that read the engine's draw state, then native shaders
-for each platform built ahead of time), and less memory for Macs with 8 and 16 GB. Details:
+**How native each part is:** [the PS4 layers](docs/ROADMAP.md#the-ps4-layers). **Next:** the
+renderer (N2: taking draws from the engine, and the game's shaders built ahead of time), and less memory for Macs with 8 and 16 GB. Details:
 [Status](docs/STATUS.md) and [Roadmap](docs/ROADMAP.md).
 
 **Known issues:** blood on already killed enemies can look pale after a save reload; the camera
