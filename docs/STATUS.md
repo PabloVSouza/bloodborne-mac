@@ -3,14 +3,15 @@
 [← Documentation](README.md)
 
 Where the whole project stands: what is released, what is on main, what is being worked on and
-what comes next. Updated 2026-10-30. The plan in order: [Roadmap](ROADMAP.md). Each repository's
+what comes next. Updated 2026-11-02. The plan in order: [Roadmap](ROADMAP.md). Each repository's
 own status: [runtime](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md#the-layers),
 [recompiler](https://github.com/bloodborne-native/bloodborne-recomp/blob/main/docs/RECOMPILATION.md#milestones),
 [launcher](https://github.com/bloodborne-native/bloodborne-launcher/blob/main/README.md#status).
 
 ## At a glance
 
-- **Released:** 0.9.3, on 2026-10-30: about a third faster on the Metal renderer (lossless
+- **Released:** 0.9.4, on 2026-11-02: The Hunter's Dream sign-in from the launcher, its connection
+  crash fixed and GPU-only textures kept ([notes](releases/v0.9.4.md)). 0.9.3, on 2026-10-30: about a third faster on the Metal renderer (lossless
   texture compression), less processor time, and a recompiled library that survives updates and
   is updated in seconds to minutes instead of rebuilt ([notes](releases/v0.9.3.md)). 0.9.0 brought the native Metal
   renderer, online play, the save editor and the recompiled code page ([notes](releases/v0.9.0.md)).
@@ -43,6 +44,7 @@ runs on macOS, Windows and Linux; game integration exists on macOS and on iOS.
 
 | Version | Highlights |
 |---|---|
+| 0.9.4 | The Hunter's Dream sign-in from the launcher; its connection crash fixed; GPU-only textures kept |
 | 0.9.3 | About a third faster on the Metal renderer (lossless texture compression, MojahedAbushawish's work for bloodborne_mac_port); the frame-preparation threads on the fast cores; the recompiled library kept across updates and updated in place; the hooked functions compiled too; a damaged pipeline cache recovered from |
 | 0.9.2 | The recompiled-code build fixed (it starts, survives leaving the page, counts as it compiles, Cancel stops it all); cloth at high frame rates and the play time (bbport 0.7); the `0x2169edc` crash guarded (bbport 0.7); about 2 GB less memory and fewer translator calls with the recompiled code |
 | 0.9.1 | The shader cache no longer reuses a shader's slot, which drew walls and scenery black after long play; caches are rebuilt once; the draw-preparation threads about 10% less busy |
@@ -61,7 +63,7 @@ ported by hand (the runtime's [Upstream](https://github.com/bloodborne-native/bl
 
 ## On main
 
-Main is 0.9.3, plus:
+Main is 0.9.4, plus:
 
 - **The executable and the patches prepared in C** (runtime `src/runtime_prepare.c`,
   `src/runtime_patches.c`): the game builds them at start, without Python; `bb-patches` checks the
@@ -70,9 +72,6 @@ Main is 0.9.3, plus:
   in the menu's colours (design after ducvd89/Bloodborne-Android); `BB_TOUCH_CONTROLS`, and on the
   iPhone the launcher's Controls page, turns them off or on.
 - **Aspect ratio Auto** with the screen's own ratio at the usual heights.
-- **The Hunter's Dream:** sign-in with Discord in the launcher (SEKY443, launcher PR #5); its
-  callbacks run through bbcpu (runtime PR #9).
-- **Textures only the GPU holds are never evicted** for memory: they were drawn dark.
 - **The iPhone work** (above), from the same runtime and launcher.
 
 ## Areas
