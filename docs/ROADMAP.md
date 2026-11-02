@@ -24,50 +24,42 @@ rows measure different things, so they are not averaged into one number.
 | **[The PS4's C and file libraries](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/c-libraries.md)** | `libc.prx` and `libSceFios2.prx` run as game code | 0% `░░░░░░░░░░░░░░░░░░░░` | 0 of 2 modules recompiled; their busiest functions are replaced by host code | Recompile or replace them |
 | **[The PS4's system](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/system.md)** | Threads, memory, files, saves, input, audio, network, trophies | 0% `░░░░░░░░░░░░░░░░░░░░` | The game still makes PS4 system calls, and the runtime translates each one. No PS4 firmware runs: all of the answers are our code | Recompiled code calling the platform directly |
 | **[The renderer](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/renderer.md)** | PS4 commands and shaders translated into Metal calls every frame | 0% `░░░░░░░░░░░░░░░░░░░░` | Every frame is still translated. One translation is gone: on macOS the renderer reaches Metal directly, without Vulkan or MoltenVK | The renderer working from the engine, not from PS4 commands: the rows below |
-| **[PS4 GPU commands](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/gpu-commands.md)** | The game writes PS4 command buffers, decoded each frame | 0% `░░░░░░░░░░░░░░░░░░░░` | Every draw and dispatch is still decoded, with every switch. The engine's draws are found (N6, 99.94% matched), behind `BB_RENDER_BOUNDARY`, which no player build sets | Draws taken from the engine, then no decoding |
-| **[PS4 user data](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/user-data.md)** | A walker reads each shader's resources the way the PS4 lays them out | 0% `░░░░░░░░░░░░░░░░░░░░` | The walker runs for every player. With `BB_RENDER_BOUNDARY=flat`, 92% of draw and 79% of dispatch shader stages skip it; the shaders themselves are unchanged and the walker still teaches the slots | On by default, and the rest of the draw kinds (N2.4) |
+| **[PS4 GPU commands](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/gpu-commands.md)** | The game writes PS4 command buffers, decoded each frame | 0% `░░░░░░░░░░░░░░░░░░░░` | Every draw and dispatch is still decoded, with every switch. The engine's draws are found (the render boundary, 99.94% matched), behind `BB_RENDER_BOUNDARY`, which no player build sets | Draws taken from the engine, then no decoding |
+| **[PS4 user data](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/user-data.md)** | A walker reads each shader's resources the way the PS4 lays them out | 0% `░░░░░░░░░░░░░░░░░░░░` | The walker runs for every player. With `BB_RENDER_BOUNDARY=flat`, 92% of draw and 79% of dispatch shader stages skip it; the shaders themselves are unchanged and the walker still teaches the slots | On by default, and the rest of the draw kinds (the other draw kinds) |
 | **[Shaders compiled during play](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/shaders.md)** | PS4 shaders converted and compiled at first use | 86% `█████████████████░░░` | 253 of 295 sources one Clinic session used were already built; opt-in in the launcher, one area, standing still. Shaders stay converted from GCN, ahead of time, by decision | The remaining forms, other areas, Vulkan's build path |
-| **[PS4 textures and memory](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/textures-memory.md)** | The PS4's CPU and GPU share one memory, and the game is written around that: textures are inferred from it and held twice | 0% `░░░░░░░░░░░░░░░░░░░░` | N3 not started | Textures as the objects the engine creates. Needed on every platform, and more on PCs with a separate GPU memory, where shared data has to be copied and kept in sync |
+| **[PS4 textures and memory](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/textures-memory.md)** | The PS4's CPU and GPU share one memory, and the game is written around that: textures are inferred from it and held twice | 0% `░░░░░░░░░░░░░░░░░░░░` | Textures as objects not started | Textures as the objects the engine creates. Needed on every platform, and more on PCs with a separate GPU memory, where shared data has to be copied and kept in sync |
 | **[x86 memory ordering](https://github.com/bloodborne-native/bloodborne-recomp/blob/main/docs/layers/memory-ordering.md)** | Every load and store keeps x86's ordering on arm64 | 0% `░░░░░░░░░░░░░░░░░░░░` | Not started. Only arm64 needs this layer: x86-64 keeps this ordering in hardware | Ordering kept only around the engine's synchronization |
 | **[The PS4 executable](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/executable.md)** | The game starts from a PS4 executable, prepared and patched in memory | 0% `░░░░░░░░░░░░░░░░░░░░` | The game still starts from it, with the recompiled library loaded into it | A game that starts as a native program |
 
+## Priorities
+
+Ordered by what each layer would gain for the game: frame rate, stalls, CPU and memory. **Measure
+first:** the game is limited by the GPU at 1080p on an M3 Pro, and no Metal System Trace of a frame
+has been recorded, so the first two rows rest on MoltenVK's figures and on the memory they would
+save. CPU savings do not raise the frame rate on an M3 Pro; they matter for heat, battery and weaker
+CPUs. Figures are from an M3 Pro in Iosefka's Clinic unless they say otherwise.
+
+| # | Layer | Frame rate | CPU | Memory | Why here |
+|---|---|---|---|---|---|
+| 1 | [PS4 textures and memory](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/textures-memory.md) | Some: copies about 2 ms of GPU on MoltenVK | Less tracking; not measured | **About 1–1.5 GB** | The largest memory saving, needed for 8 and 16 GB Macs and for PCs with a separate GPU memory |
+| 2 | [The renderer](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/renderer.md) | **The largest:** 6–8 ms of GPU idle a frame on MoltenVK; not measured on Metal | Recording takes about 1.8 cores | Not measured | The only layer shown to bound the frame rate |
+| 3 | [Shaders compiled during play](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/shaders.md) | **Stalls:** worst frame 561 ms; 258 ms with recorded states | None in play | None | Felt the most in play, but only at first use; no change to the average |
+| 4 | [The game's code](https://github.com/bloodborne-native/bloodborne-recomp/blob/main/docs/layers/game-code.md) | None on an M3 Pro | **14% less game CPU** (0.4–0.6 core), already built | Not measured against the translator | Making the library the default is the cheapest large saving |
+| 5 | [PS4 GPU commands](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/gpu-commands.md) | None measured | About 0.6 core | Not measured | Needs draws taken from the engine first |
+| 6 | [x86 memory ordering](https://github.com/bloodborne-native/bloodborne-recomp/blob/main/docs/layers/memory-ordering.md) | None on an M3 Pro | Not measured | None | Paid on every access on arm64, with the highest risk: the maintainer's conditions apply |
+| 7 | [PS4 user data](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/user-data.md) | None | At most about 0.3 core, while the observer costs about 45 points today | None | A net cost until the observer is cheaper |
+| 8 | [The PS4's C and file libraries](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/c-libraries.md) | None | Part of about 6% of the main thread's busy time | None | The busiest functions are already replaced |
+| 9 | [The PS4's system](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/system.md) | None | Not measured | None | Mostly needed for platforms, not speed |
+| 10 | [The PS4 executable](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/executable.md) | None | None in play | None | Done for portability, last |
+
+Other work: less memory for Macs with 8 and 16 GB through the iPhone's compact memory layout (the
+game's memory as one file mapping, Metal's view of it, nothing pinned), each step measured in
+footprint and FPS.
+
 ## Now
 
-- **N2, the native renderer's next step** (the first item of Next, below), the maintainer's focus
-  from 2026-10-29. N5, the native Metal renderer, is accepted (Done).
-
-## Next
-
-In this order (maintainer, 2026-10-29: the native renderer first):
-
-1. **N2, shaders from the draw state, then native shaders ahead of time** (runtime). N6 found
-   every input of a draw in the engine's draw state; the shaders still read the PS4 user data, so
-   N2 builds them to read the draw state's slots instead: mesh draws first, then the other draw
-   kinds. Then the game's shaders are built once, ahead of time, on the player's device, as native
-   shaders for each platform (Metal libraries on macOS and iOS, SPIR-V for Vulkan): a launcher
-   step, like the recompiled-code build (the maintainer's decision, 2026-10-30), and a setting in
-   the recompiler settings that players enable if they want it, because it takes time; it skips what
-   is already compiled and shows compiled of total (2026-10-31). The step and the setting are on
-   `main` for shaders, and for pipelines from the engine's rules, with no recorded play needed; what
-   remains is the shaders it still misses and measuring other areas.
-   Until a player runs it, and for anything it did not foresee, shaders convert at first use as
-   now. Its steps are in the runtime's
-   [NATIVE_RENDERER.md](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md#n2-shaders-from-the-draw-state-then-ahead-of-time).
-2. **Memory for Macs with 8 and 16 GB** (runtime): a 16 GB M1 Pro ran out of memory in the
-   Forbidden Woods with the MoltenVK renderer
-   ([#8](https://github.com/bloodborne-native/bloodborne-mac/issues/8), closed: not with the
-   default Metal renderer), and 8 GB
-   Macs are still sold. Main's peak footprint is 5.7 GB in Iosefka's Clinic (7.8 GB before the
-   recompiled library stopped keeping the game decoded); next, the iPhone's compact memory layout
-   as a Mac mode (the game's memory as one file mapping, Metal's view of it, nothing pinned), each
-   step measured in footprint and FPS.
-3. **N3, textures as objects** (runtime): textures taken as the objects the engine creates and
-   releases, without a second copy of each in Metal (about 1–1.5 GB in Iosefka's Clinic).
-4. **The recompiler's memory ordering** (recomp): ordering kept only around the engine's
-   synchronization, which R4.4 named, with the maintainer's conditions (the generator's analysis,
-   a safety case and a long play session). The rest of its CPU work is measured: calls left to the
-   translator 69,600 a second to 9,400; flags, private frames, vector barriers and the host-call
-   path gain little or nothing.
+The shader compile step and its misses ([Shaders compiled during play](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/layers/shaders.md)), on `main` as
+an opt-in setting.
 
 ## Later
 
@@ -162,11 +154,11 @@ Where each landed; the release notes say what changed for players.
 
 **CPU and recompiler** (bloodborne-recomp):
 
-- R0–R3: every function recompiled and running in the game, with less CPU time than the translator
-  (R3, 2026-10-25).
+- The first stages of the recompiler: every function recompiled and running in the game, with less CPU time than the translator
+  (the speed work, 2026-10-25).
 - The recompiled library built from the launcher with a downloaded LLVM toolchain (recomp
   `aa47a95`, runtime `8d2d469`, launcher `adec5ac`).
-- R4: the engine's render code, synchronization and 20 busiest functions named and described
+- The annotations: the engine's render code, synchronization and 20 busiest functions named and described
   (recomp `annotations/`, 2026-10-28).
 - A faster translator (recomp #15, #16, #17, #18) and the runtime's own math and wide-string
   calls (runtime #7); the game's threads at user-interactive QoS (runtime #8).
@@ -175,7 +167,7 @@ Where each landed; the release notes say what changed for players.
 
 - The native Metal renderer: every pipeline in Metal, the frame drawn through Metal, the render
   adapter (A0–A6, M1–M4), native startup without Vulkan or MoltenVK; the default since 0.9.0 RC 1,
-  accepted as N5 (the maintainer, 2026-10-29). MoltenVK stays selectable as a fallback until the
+  accepted as the Metal backend (the maintainer, 2026-10-29). MoltenVK stays selectable as a fallback until the
   maintainer decides whether it leaves the macOS app.
 - Lossless texture compression (2026-10-30, runtime `316e0eb2`): textures made without the
   ShaderWrite and PixelFormatView usages until a view needs one, so Apple GPUs compress them; +33%
@@ -183,8 +175,8 @@ Where each landed; the release notes say what changed for players.
   texture usages for Wooloomooloo2's [bloodborne_mac_port](https://github.com/Wooloomooloo2/bloodborne_mac_port) (#33).
 - MetalFX (runtime PR #2) on the native frame; FSR 4.1.1 on the Mac's GPU with the MoltenVK renderer
   (runtime #1, 0.8.3).
-- N0 (scope), N1 (frame planning: deferred clears).
-- N6, the engine's render boundary (2026-10-28, merged 2026-10-29: runtime `cf0ce17d`; mesh draws
+- The renderer's scope (scope), frame planning (frame planning: deferred clears).
+- The render boundary, the engine's render boundary (2026-10-28, merged 2026-10-29: runtime `cf0ce17d`; mesh draws
   recognised with the recompiled library too, recomp `8c49bc7`): the engine's draws matched to
   their packets and observed; every buffer address and resource slot found from its draw state;
   mesh draws bind their resources from it (`BB_RENDER_BOUNDARY=observe|mesh`).

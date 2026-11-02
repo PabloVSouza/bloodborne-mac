@@ -4,7 +4,7 @@
 
 Where the whole project stands: what is released, what is on main, what is being worked on and
 what comes next. Updated 2026-10-30. The plan in order: [Roadmap](ROADMAP.md). Each repository's
-own status: [runtime](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md#progress),
+own status: [runtime](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md#the-layers),
 [recompiler](https://github.com/bloodborne-native/bloodborne-recomp/blob/main/docs/RECOMPILATION.md#milestones),
 [launcher](https://github.com/bloodborne-native/bloodborne-launcher/blob/main/README.md#status).
 
@@ -19,9 +19,9 @@ own status: [runtime](https://github.com/bloodborne-native/bloodborne-runtime/bl
   (adapted from [MojahedAbushawish](https://github.com/MojahedAbushawish)'s lazy texture usages for
   Wooloomooloo2's [bloodborne_mac_port](https://github.com/Wooloomooloo2/bloodborne_mac_port), #33)
   ([performance](guide/performance.md)).
-- **Now:** the native renderer (the maintainer's focus from 2026-10-29): N2, draws taken from
+- **Now:** the native renderer (the maintainer's focus from 2026-10-29): the draw-state work, draws taken from
   the engine's draw state instead of the PS4 user data (a developer switch today), then the game's
-  shaders built ahead of time, converted for each platform. The Metal renderer (N5) is accepted (2026-10-29).
+  shaders built ahead of time, converted for each platform. The Metal renderer (the Metal backend) is accepted (2026-10-29).
 - **Memory for smaller Macs:** a 16 GB M1 Pro ran out of memory in the Forbidden Woods with the
   MoltenVK renderer ([#8](https://github.com/bloodborne-native/bloodborne-mac/issues/8), closed:
   the default Metal renderer does not run out there). The game's peak footprint
@@ -30,31 +30,14 @@ own status: [runtime](https://github.com/bloodborne-native/bloodborne-runtime/bl
 - **The recompiler's CPU work:** calls left to the translator down from 69,600 a second to 9,400;
   what is left (memory ordering) waits for the maintainer's conditions.
 
-## Milestones
+## The PS4 layers
 
-Each bar has 20 blocks, one per 5% of the milestone's defined steps. A finished milestone is a
-finished step, not a native layer: how much of the game is native is in the
-[PS4 layers](ROADMAP.md#the-ps4-layers).
+How native the game is: [the roadmap's table](ROADMAP.md#the-ps4-layers), with a page for each layer,
+and what to do first: [priorities](ROADMAP.md#priorities).
 
-| Milestone | Progress | State |
-|---|---|---|
-| **CPU** (bloodborne-recomp) | | |
-| R0–R2 · groundwork, prototype, every function recompiled | 100% `████████████████████` | The game runs on 240,978 recompiled functions; the translator remains the fallback |
-| R3 · speed | 100% `████████████████████` | 14% less CPU time than the translator at the same frame rate |
-| The library built from the launcher | 100% `████████████████████` | 13.5 minutes on an M3 Pro, no Xcode needed |
-| R4 · names for the engine's code | 100% `████████████████████` | 204 functions named; the draw state, models, materials and shaders described |
-| The recompiler's CPU work | 30% `██████░░░░░░░░░░░░░░` | The first plan measured (flags, private frames, vector barriers, the host-call path: little or nothing); more jump tables and host C library calls: translator calls 69,600 a second to 9,400, 342% to 339%; next, memory ordering (the maintainer's conditions) |
-| **Graphics** (bloodborne-runtime) | | |
-| N0 · scope, N1 · frame planning | 100% `████████████████████` | Deferred clears |
-| N4 · render adapter | 100% `████████████████████` | The renderer on the project's own GPU interface |
-| N5 · Metal backend | 100% `████████████████████` | Accepted (the maintainer, 2026-10-29); the default since 0.9.0 RC 1; MoltenVK selectable as a fallback. Every frame is still PS4 commands translated into Metal calls |
-| N6 · the engine's render boundary | 100% `████████████████████` | Done (re-scoped 2026-10-28; on main since 2026-10-29): 99.94% of the engine's draws matched to their packets, their state and resources agreeing; every buffer address and resource slot found from the draw state; mesh draws bind their resources from it, with the translator or the recompiled library ([details](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md#n6-the-engines-render-boundary)). The other draw kinds move to N2: converted GCN shaders read the user data themselves, so taking draws over saves nothing until N2 |
-| N2 · shaders from the draw state, then native shaders ahead of time | in progress | The plan, the inventory, N2.3 and most of N2.4: 92% of draw shader stages and 79% of compute dispatch stages run without the PS4 user data's walker, taking their resources from the engine's state or straight from the registers it sets (opt-in, `BB_RENDER_BOUNDARY=flat`; exact; the observer still costs about 45 CPU points) ([details](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md#n2-shaders-from-the-draw-state-then-ahead-of-time)). First-play stalls are down from 12 s to 7 s and the worst frame from 4.9 s to 2.0 s with translating ahead (opt-in, `BB_SHADER_AHEAD=1`). The optional compile step in the launcher's recompiler settings builds shaders from the game's files and pipelines from render states the player's sessions noted (worst frame of a first play in Iosefka's Clinic 1.9 s to 258 ms, one run, other areas not measured). Next: the last walker users and the shaders the step still misses |
-| N3 · textures as objects | 0% `░░░░░░░░░░░░░░░░░░░░` | After N2 |
-| **Platforms** | | |
-| macOS (Apple Silicon) | | Released |
-| iOS | proof of concept | Not the focus of development. [bloodborne-ios](https://github.com/bloodborne-native/bloodborne-ios) (public, built and installed from the player's own Mac): the launcher's app runs the game in its own process, prepared and patched on the phone, with touch controls and the screen's own shape. iPhone 17 Pro Max, 960×540: 38–42 FPS uncapped in the first 20 s; capped at 30, it holds 30 once the phone throttles. The game can stop when the system draws over it: the address space of an app signed with a free Apple ID runs out ([findings](https://github.com/bloodborne-native/bloodborne-ios/blob/main/docs/FINDINGS.md)) |
-| Linux | runtime only | The Vulkan backend builds and passes its tests (manual CI); no app |
+**Platforms.** macOS is released. iOS is a [proof of concept](https://github.com/bloodborne-native/bloodborne-ios), not the focus of
+development, built and installed from the player's own Mac. Linux has the runtime only. The launcher
+runs on macOS, Windows and Linux; game integration exists on macOS and on iOS.
 
 ## Releases
 
@@ -91,15 +74,6 @@ Main is 0.9.3, plus:
   callbacks run through bbcpu (runtime PR #9).
 - **Textures only the GPU holds are never evicted** for memory: they were drawn dark.
 - **The iPhone work** (above), from the same runtime and launcher.
-
-## How native it is
-
-| Part | Native now | Still not native |
-|---|---|---|
-| The game's code | With the recompiled library: 240,975 of 241,031 functions as arm64 code compiled on the player's Mac, 99% of instructions in C; 9,400 calls a second still reach the translator (Iosefka's Clinic) | The library is opt-in (the translator is the default); the game's own C library and file-streaming modules (libc.prx, libSceFios2.prx) run translated, their busiest functions replaced by host code |
-| The PS4's system services | Threads, memory, files, saves, input, audio, network and trophies are the runtime's host code; no PS4 firmware | libc.prx and libSceFios2.prx, above |
-| Graphics | Nothing yet: on macOS frames reach Metal without Vulkan or MoltenVK, but each one is translated from PS4 commands; the GCN shaders converted to Metal once and cached (they stay converted, by the maintainer's decision) | The game still writes PS4 GPU command buffers that the runtime decodes each frame (about 0.6 core); N2 (shaders reading the engine's draw state, then ahead of time) and N3 (textures as objects) |
-| Platforms | macOS released | iOS a proof of concept; Linux the runtime only |
 
 ## Areas
 

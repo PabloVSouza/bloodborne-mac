@@ -79,12 +79,12 @@ and [profiles and saves](https://github.com/bloodborne-native/bloodborne-launche
 
 By default the game's code is translated while it runs, and every frame is the PS4's GPU command
 buffers decoded into Metal calls. Two milestones replace both with native code; where each stands
-is in [Status](STATUS.md#how-native-it-is):
+is in [Status](ROADMAP.md#the-ps4-layers):
 
 - **The recompiler** turns the game's functions, from the player's own executable, into C
   compiled into a native library, checked against calls recorded from the original. Every
   function runs recompiled, with less CPU time than the translator, and the launcher builds the
-  library on the player's Mac. R4 named the engine's render code, its synchronization and its
+  library on the player's Mac. The annotations named the engine's render code, its synchronization and its
   busiest functions, which the next steps use
   ([Recompilation](https://github.com/bloodborne-native/bloodborne-recomp/blob/main/docs/RECOMPILATION.md)).
 - **The native renderer** is the goal, not what runs today. The renderer reaches Metal directly on
@@ -92,9 +92,9 @@ is in [Status](STATUS.md#how-native-it-is):
   through the project's own GPU interface, the render adapter, but every frame is still translated
   from PS4 commands. The goal is for the adapter to take the
   engine's draws, with their draw state, instead of the PS4 command buffers the engine writes
-  under them. N6 found that boundary and every input of a draw in the engine's state; N2 takes draws from
+  under them. The render boundary found that boundary and every input of a draw in the engine's state; the draw-state work takes draws from
   that state (a developer switch today), then builds the game's shaders once, ahead of time, as native
-  shaders for each platform (Metal on macOS and iOS, SPIR-V for Vulkan); N3 takes textures as the
+  shaders for each platform (Metal on macOS and iOS, SPIR-V for Vulkan); textures as objects takes textures as the
   objects the engine creates, without a second copy of each
   ([Native renderer](https://github.com/bloodborne-native/bloodborne-runtime/blob/main/docs/NATIVE_RENDERER.md)).
 

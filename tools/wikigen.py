@@ -107,8 +107,8 @@ def main():
         groups = groups + [('Releases', names)]
     if key == 'recomp':
         doc = (checkout / 'docs/RECOMPILATION.md').read_text()
-        body = ('# Recompilation status\n\nGenerated from [Recompilation](Recompilation): its milestones and '
-                'progress.\n\n## Milestones\n\n' + section(doc, 'Milestones') + '\n\n## Progress\n\n'
+        body = ('# Recompilation status\n\nGenerated from [Recompilation](Recompilation): its layers and '
+                'progress.\n\n## The layers\n\n' + section(doc, 'The layers') + '\n\n## Progress\n\n'
                 + section(doc, 'Progress') + '\n')
         out['Recompilation-status'] = convert(repo, pages, 'docs/RECOMPILATION.md', body)
     side = ['[Home](Home)', '']

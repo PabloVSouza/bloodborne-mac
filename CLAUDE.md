@@ -8,7 +8,7 @@ with the CPU layer and recompiler in `runtime/recomp/` (bloodborne-recomp); the 
 ## Read first
 
 - `docs/STATUS.md`: what main has, what is open, where to continue.
-- `docs/ROADMAP.md`: the plan (Now, Next, Later, Not taken, Done); an item moves to Done, with
+- `docs/ROADMAP.md`: the plan (the PS4 layers, Priorities, Now, Later, Not taken, Done); an item moves to Done, with
   where it landed, when the work lands.
 - `docs/ARCHITECTURE.md`, `docs/BUILDING.md` (build, working across submodules, releasing).
 - Each submodule's CLAUDE.md and docs for its own work.
