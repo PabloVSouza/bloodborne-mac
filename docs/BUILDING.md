@@ -110,7 +110,8 @@ update checks compare correctly.
    publishes the release with the notes, then posts it to the Discord server's `#releases`
    (`packaging/discord_release.py`: the notes' heading, their "What's new" list and known issues;
    the `DISCORD_RELEASES_WEBHOOK` secret). Check the run (`gh run list`), the release's asset and
-   the post. `DRY_RUN=1 python3 packaging/discord_release.py vX.Y.Z` shows the post beforehand.
+   the post. `DRY_RUN=1 python3 packaging/discord_release.py vX.Y.Z` shows the post beforehand;
+   `gh workflow run discord-release.yml -f tag=vX.Y.Z` posts it again from main's notes.
 
 README screenshots come from the game (`runtime/tools/grab.sh`, in English), never from the
 screen; launcher screenshots from its browser preview with mock data.
