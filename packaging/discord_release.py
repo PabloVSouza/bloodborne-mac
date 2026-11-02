@@ -12,7 +12,8 @@ import sys
 import urllib.request
 
 REPO = 'bloodborne-native/bloodborne-mac'
-ICON = 'https://raw.githubusercontent.com/bloodborne-native/bloodborne-launcher/main/src-tauri/icons/128x128%402x.png'
+# Pinned to a commit: Discord keeps an image by its URL, so a changed icon needs a new URL.
+ICON = 'https://raw.githubusercontent.com/bloodborne-native/bloodborne-launcher/19f6178/src-tauri/icons/128x128%402x.png'
 
 
 def unwrap(lines):
